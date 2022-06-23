@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://yunWheel.yun.com/schema/tag"
+            targetNamespace="http://yunWheel.yun.com/schema/tag"
+            elementFormDefault="qualified">
+    <xsd:element name="application">
+        <xsd:complexType>
+            <xsd:attribute name="name" type="xsd:string"></xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="registry">
+        <xsd:complexType>
+            <xsd:attribute name="address" type="xsd:string"></xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="protocol">
+        <xsd:complexType>
+            <xsd:attribute name="protocol" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="port" type="xsd:integer"></xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="service">
+        <xsd:complexType>
+            <xsd:attribute name="interface" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="version" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="ref" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="group" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="timeout" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="failStrategy" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="retryCount" type="xsd:string"></xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="reference">
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="interface" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="version" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="group" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="timeout" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="failStrategy" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="retryCount" type="xsd:string"></xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:yun="http://yunWheel.yun.com/schema/tag"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://yunWheel.yun.com/schema/tag
+        http://yunWheel.yun.com/schema/tag/wheel.xsd">
+
+    <yun:application name="demo-provider"/>
+    <yun:registry address="zookeeper://127.0.0.1:2181" />
+    <yun:protocol protocol="dubbo" port="8084"/>
+
+    <bean id="demoService" class="com.wheel.yun.provider.DemoServiceImpl"/>
+    <yun:service interface="com.wheel.yun.api.DemoService" ref="demoService" retryCount="3" timeout="3000" version="1.0.0"/>
+</beans>
