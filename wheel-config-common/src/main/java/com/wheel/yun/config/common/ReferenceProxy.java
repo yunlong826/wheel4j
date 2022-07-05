@@ -6,6 +6,7 @@ import com.wheel.yun.common.invoker.RpcInvocation;
 import com.wheel.yun.registry.api.FailfastClusterInvoker;
 import com.wheel.yun.registry.api.RegistryDirectory;
 import com.wheel.yun.rpc.common.RpcResponse;
+import com.wheel.yun.rpc.common.RpcStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -38,10 +39,13 @@ public class ReferenceProxy<T> implements InvocationHandler {
 
     private InterfaceConfig interfaceConfig;
 
+    private String ipAndPort;
+
     public ReferenceProxy(Class<T> clazz, InterfaceConfig interfaceConfig,RegistryConfig registryConfig){
         proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{clazz}, this);
         this.clazzName = clazz.getName();
-        registryDirectory = new RegistryDirectory(clazzName, registryConfig.getHost()+":"+registryConfig.getPort()
+        this.ipAndPort = registryConfig.getHost()+":"+registryConfig.getPort();
+        registryDirectory = new RegistryDirectory(clazzName, this.ipAndPort
                 ,interfaceConfig);
         failfastClusterInvoker = new FailfastClusterInvoker(registryDirectory);
         this.interfaceConfig = interfaceConfig;
@@ -82,6 +86,10 @@ public class ReferenceProxy<T> implements InvocationHandler {
         log.info("jdk调用：{}，代理类为：{}，返回类型：{}", rpcInvocation, proxy, returnType);
         // todo 通过接口配置决定用哪种策略
         RpcResponse response = (RpcResponse)failfastClusterInvoker.invoke(rpcInvocation);
+        // 发起了一次调用，被调用的服务在后台被计数一次，配合wheel-cluster中LeastActiveLoadBalance类使用
+        RpcStatus.beginCount(ipAndPort,rpcInvocation,Integer.MAX_VALUE);
+        log.info("-------------------------->ipAndPort:{},jdk调用:{},activeCount:{}",ipAndPort,rpcInvocation,
+                RpcStatus.getStatus(ipAndPort,rpcInvocation).getActive());
         if (returnType == Void.class) {
             return null;
         }
