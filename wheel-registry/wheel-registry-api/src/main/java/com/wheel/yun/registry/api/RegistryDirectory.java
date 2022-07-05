@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RegistryDirectory implements ChildListener {
 
-    private Map<String, WheelInvoker> ipAndPort2InvokerMap = new ConcurrentHashMap<>();
+    private Map<String, WheelInvoker> ipAndPortAndWeight2InvokerMap = new ConcurrentHashMap<>();
 
     private RegistryService registryService;
 
@@ -62,23 +62,23 @@ public class RegistryDirectory implements ChildListener {
                 children = Lists.newArrayList();
             }
             List<String> added = children.stream()
-                    .filter(one -> !ipAndPort2InvokerMap.containsKey(one))
+                    .filter(one -> !ipAndPortAndWeight2InvokerMap.containsKey(one))
                     .collect(Collectors.toList());
             List<String> finalChildren = children;
-            List<String> deleted = ipAndPort2InvokerMap.keySet().stream()
+            List<String> deleted = ipAndPortAndWeight2InvokerMap.keySet().stream()
                     .filter(one -> !finalChildren.contains(one))
                     .collect(Collectors.toList());
             log.info("监听到zk路径：{}，子节点变化，新增zk节点：{}，删除zk节点：{}", providerPath, added, deleted);
 
-            added.forEach(ipAndPort -> {
-                if (!ipAndPort2InvokerMap.containsKey(ipAndPort)) {
-                    ipAndPort2InvokerMap.put(ipAndPort, new WheelInvoker(ipAndPort,interfaceConfig));
+            added.forEach(ipAndPortAndWeight -> {
+                if (!ipAndPortAndWeight2InvokerMap.containsKey(ipAndPortAndWeight)) {
+                    ipAndPortAndWeight2InvokerMap.put(ipAndPortAndWeight, new WheelInvoker(ipAndPortAndWeight,interfaceConfig));
                 }
             });
-            deleted.forEach(ipAndPort -> {
+            deleted.forEach(ipAndPortAndWeight -> {
                 // 运行时删除
-                ipAndPort2InvokerMap.get(ipAndPort).destroy();
-                ipAndPort2InvokerMap.remove(ipAndPort);
+                ipAndPortAndWeight2InvokerMap.get(ipAndPortAndWeight).destroy();
+                ipAndPortAndWeight2InvokerMap.remove(ipAndPortAndWeight);
             });
         } catch (Exception e) {
             log.error("处理zk事件出错", e);
@@ -87,7 +87,7 @@ public class RegistryDirectory implements ChildListener {
 
     public List<WheelInvoker> getInvokerList() {
         // 找出可用的，zk有子节点，不表示节点底层网络可连通，例如zk超时时间比较长，还没有检测到
-        return ipAndPort2InvokerMap.values().stream().filter(dubboInvoker -> {
+        return ipAndPortAndWeight2InvokerMap.values().stream().filter(dubboInvoker -> {
             boolean available = dubboInvoker.isAvailable();
             if (!available) {
                 log.warn("zk上该节点存在，但是底层网络探测到已经断开：{}", dubboInvoker.getIpAndPort());
@@ -105,9 +105,9 @@ public class RegistryDirectory implements ChildListener {
         // 减少引用，引用为0再关闭
         RegistryManager.remove(registryAddress);
 
-        ipAndPort2InvokerMap.forEach((key, dubboInvoker) -> {
+        ipAndPortAndWeight2InvokerMap.forEach((key, dubboInvoker) -> {
             dubboInvoker.destroy();
         });
-        ipAndPort2InvokerMap.clear();
+        ipAndPortAndWeight2InvokerMap.clear();
     }
 }

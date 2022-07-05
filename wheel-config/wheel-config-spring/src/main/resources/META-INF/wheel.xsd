@@ -28,6 +28,8 @@
             <xsd:attribute name="timeout" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="failStrategy" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="retryCount" type="xsd:string"></xsd:attribute>
+            <xsd:attribute name="weight" type="xsd:integer"></xsd:attribute>
+            <xsd:attribute name="loadbalance" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
     <xsd:element name="reference">

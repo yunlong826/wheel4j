@@ -5,20 +5,8 @@
     <groupId>com.wheel.yun.json</groupId>
     <artifactId>wheel-json</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <name>wheel-json</name>
-    <description>Demo project for Spring Boot</description>
+    <description>JSON 模块</description>
 
     <parent>
         <artifactId>wheel-rpc-serialization</artifactId>
@@ -54,6 +42,18 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

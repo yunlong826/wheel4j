@@ -5,20 +5,9 @@
     <groupId>com.wheel.yun.remote.netty</groupId>
     <artifactId>wheel-remote-netty</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
     <name>wheel-remote-netty</name>
-    <description>Demo project for Spring Boot</description>
+    <description>wheel-remote-netty</description>
 
     <parent>
         <artifactId>wheel-remote</artifactId>
@@ -37,7 +26,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -70,5 +58,18 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

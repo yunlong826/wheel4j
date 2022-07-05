@@ -6,7 +6,7 @@
     <artifactId>wheel-serialization-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>wheel-serialization-api</name>
-    <description>Demo project for Spring Boot</description>
+    <description>序列化API</description>
 
     <parent>
         <artifactId>wheel-rpc-serialization</artifactId>
@@ -21,5 +21,16 @@
         <spring-boot.version>2.3.7.RELEASE</spring-boot.version>
     </properties>
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

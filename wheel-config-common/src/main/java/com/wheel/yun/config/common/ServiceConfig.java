@@ -13,6 +13,24 @@ public class ServiceConfig<T> extends InterfaceConfig {
 
     private String interfaceName;
     private String ref;
+    private Integer weight = 0;
+    private String loadbalance = "consistentHash";
+
+    public String getLoadbalance() {
+        return loadbalance;
+    }
+
+    public void setLoadbalance(String loadbalance) {
+        this.loadbalance = loadbalance;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
 
     public String getRef() {
         return ref;

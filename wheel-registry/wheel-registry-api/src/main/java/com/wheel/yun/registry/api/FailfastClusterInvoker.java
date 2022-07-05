@@ -6,6 +6,7 @@ package com.wheel.yun.registry.api;
 
 
 
+import com.wheel.yun.cluster.factory.LoadBalanceFactory;
 import com.wheel.yun.common.invoker.RpcInvocation;
 import com.wheel.yun.invoker.WheelInvoker;
 
@@ -33,6 +34,8 @@ public class FailfastClusterInvoker {
         if (dubboInvokerList.size() == 0) {
             throw new RuntimeException("no provider ");
         }
-        return dubboInvokerList.get(1).invoke(rpcInvocation);
+        WheelInvoker select = LoadBalanceFactory.getLoadBalance(dubboInvokerList.get(0).getLoadbalance()).select(dubboInvokerList, rpcInvocation);
+
+        return select.invoke(rpcInvocation);
     }
 }

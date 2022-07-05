@@ -104,7 +104,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
         // 判断什么类型的注册中心
         registryService = RegistryManager.getRegistryService(this.ipAndPort);
         providerPath = "/wheel/"+interfaceConfig.getGroup()+clazzName+"/providers"+"/"+ NetUtils.getServerIp() + ":"
-                +nettyPort;
+                +nettyPort+"@"+serviceBean.getLoadbalance()+"_"+serviceBean.getWeight();
         registryService.register(providerPath);
 
     }

@@ -5,20 +5,8 @@
     <groupId>com.wheel.yun.rpc</groupId>
     <artifactId>wheel-rpc-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <name>wheel-rpc-core</name>
-    <description>Demo project for Spring Boot</description>
+    <description>rpc-core</description>
 
     <parent>
         <artifactId>wheel4j</artifactId>
@@ -59,5 +47,17 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

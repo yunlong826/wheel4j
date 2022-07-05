@@ -6,7 +6,7 @@
     <artifactId>wheel-registry-factory</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>wheel-registry-factory</name>
-    <description>Demo project for Spring Boot</description>
+    <description>wheel-registry-factory</description>
     <parent>
         <artifactId>wheel-registry</artifactId>
         <groupId>com.wheel.yun.registry</groupId>
@@ -33,6 +33,19 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 

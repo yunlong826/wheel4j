@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
  * @Date: 19-11-25 下午10:04
  */
 @Slf4j
-public class WheelInvoker {
+public class WheelInvoker<T> {
     private NettyClient nettyClient;
     /**
      * 消费端url
@@ -30,8 +30,16 @@ public class WheelInvoker {
 
     private String ipAndPort;
 
-    public WheelInvoker(String ipAndPort, InterfaceConfig interfaceConfig) {
-        this.ipAndPort = ipAndPort;
+    private String loadbalance;
+    private Integer weight;
+
+    public WheelInvoker(String ipAndPortAndWeight, InterfaceConfig interfaceConfig) {
+        // 第一个参数: ip:port@loadbalance_weight
+        int idx1 = ipAndPortAndWeight.indexOf("_");
+        int idx2 = ipAndPortAndWeight.indexOf("@");
+        this.ipAndPort = ipAndPortAndWeight.substring(0,idx2);
+        this.weight = Integer.valueOf(ipAndPortAndWeight.substring(idx1+1));
+        this.loadbalance = ipAndPortAndWeight.substring(idx2+1,idx1);
         this.interfaceConfig = interfaceConfig;
         // 对于同一个机器可以共享，可以使用缓存
         // todo 支持使用连接池，同一个机器可以建立多个连接，构成一个池子，随机使用，类似于jdbc连接池、redis连接池
@@ -84,5 +92,22 @@ public class WheelInvoker {
     public void destroy() {
         // 引用计数移除
         NettyManager.removeNettyClient(ipAndPort);
+    }
+    public String getLoadbalance() {
+        return loadbalance;
+    }
+
+    public void setLoadbalance(String loadbalance) {
+        this.loadbalance = loadbalance;
+    }
+
+
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
     }
 }
