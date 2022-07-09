@@ -22,11 +22,22 @@ public class RegistryConfig implements Serializable {
         this.address = address;
         setAddress(address);
     }
+    public RegistryConfig(String address,String id){
+        this.address = address;
+        this.id = id;
+        setAddress(address);
+    }
+
 
     /**
      * Register center address
      */
     private String address;
+
+    /**
+     * Register center id
+     */
+    private String id;
 
     /**
      * Username to login register center
@@ -105,6 +116,14 @@ public class RegistryConfig implements Serializable {
 
     public void setProtocol(String protocol) {
         this.protocol = protocol;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setAddress(String address) {

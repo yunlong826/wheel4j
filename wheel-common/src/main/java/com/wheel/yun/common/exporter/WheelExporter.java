@@ -17,12 +17,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WheelExporter {
     private static Map<String, Object> exportServiceMap = new ConcurrentHashMap();
 
-    public static void exportService(String clazzName, InterfaceConfig interfaceConfig, Object ref) {
+
+    public static void exportService(String[] clazzName,InterfaceConfig[] interfaceConfigs,Object[] refs){
+        // 三个数组的长度都是一样的
+        for(int i = 0;i<clazzName.length;i++){
+            exportService(clazzName[i],interfaceConfigs[i],refs[i]);
+        }
+    }
+    private static void exportService(String clazzName, InterfaceConfig interfaceConfig, Object ref) {
         String key = buildKey(clazzName, interfaceConfig.getVersion());
         exportServiceMap.put(key, ref);
     }
 
-    public static void remove(String clazzName, InterfaceConfig interfaceConfig) {
+    public static void remove(String[] clazzName,InterfaceConfig[] interfaceConfigs){
+        for(int i = 0;i<clazzName.length;i++){
+            remove(clazzName[i],interfaceConfigs[i]);
+        }
+    }
+    private static void remove(String clazzName, InterfaceConfig interfaceConfig) {
         String key = buildKey(clazzName, interfaceConfig.getVersion());
         exportServiceMap.remove(key);
     }

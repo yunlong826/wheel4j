@@ -10,6 +10,7 @@
     </xsd:element>
     <xsd:element name="registry">
         <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:string"></xsd:attribute>
             <xsd:attribute name="address" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>

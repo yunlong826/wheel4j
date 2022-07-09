@@ -41,6 +41,9 @@ public class ReferenceProxy<T> implements InvocationHandler {
 
     private String ipAndPort;
 
+
+
+
     public ReferenceProxy(Class<T> clazz, InterfaceConfig interfaceConfig,RegistryConfig registryConfig){
         proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{clazz}, this);
         this.clazzName = clazz.getName();

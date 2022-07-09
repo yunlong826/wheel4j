@@ -7,7 +7,7 @@
         http://yunWheel.yun.com/schema/tag/wheel.xsd">
 
     <yun:application name="demo-provider"/>
-    <yun:registry address="zookeeper://127.0.0.1:2181" />
+    <yun:registry id="registry1" address="zookeeper://127.0.0.1:2181" />
     <yun:protocol protocol="dubbo" port="8084"/>
 
     <bean id="demoService" class="com.wheel.yun.provider.DemoServiceImpl"/>

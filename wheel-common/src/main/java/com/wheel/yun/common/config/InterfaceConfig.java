@@ -1,6 +1,8 @@
 package com.wheel.yun.common.config;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author jack_yun
@@ -9,6 +11,8 @@ import lombok.Data;
  * @date 2022/5/31 14:53
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class InterfaceConfig {
 
     private String group="";

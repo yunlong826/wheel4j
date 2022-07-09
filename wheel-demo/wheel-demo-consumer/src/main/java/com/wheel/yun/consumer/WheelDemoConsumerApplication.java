@@ -14,8 +14,10 @@ public class WheelDemoConsumerApplication {
 
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("wheel-consumer.xml");
-        WheelDemoConsumerApplication wheelDemoXmlConsumerApplication = applicationContext.getBean("wheelDemoConsumerApplication", WheelDemoConsumerApplication.class);
-        System.out.println(wheelDemoXmlConsumerApplication.doSayHello("111111111"));
+//        WheelDemoConsumerApplication wheelDemoXmlConsumerApplication = applicationContext.getBean("wheelDemoConsumerApplication", WheelDemoConsumerApplication.class);
+//        System.out.println(wheelDemoXmlConsumerApplication.doSayHello("111111111"));
+        DemoService demoService = applicationContext.getBean("demoService",DemoService.class);
+        System.out.println(demoService.sayHello("111111111111111"));
     }
     public String doSayHello(String s){
         return demoService.sayHello(s);

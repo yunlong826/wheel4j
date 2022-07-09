@@ -44,16 +44,16 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
     private transient String beanName;
 
     private NettyServer nettyServer;
-    private String providerPath;
+    private String[] providerPath;
 
     private String ipAndPort;
 
     private Integer nettyPort;
 
-    private InterfaceConfig interfaceConfig;
+    private InterfaceConfig[] interfaceConfigs;
 
-    private String clazzName;
-    private Object ref_replace;
+    private String[] clazzNames;
+    private Object[] ref_replaces;
 
     /**
      * zk地址
@@ -84,39 +84,59 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
             return;
         }
 
-        ServiceBean serviceBean = WheelBeanUtils.getServiceBean(applicationContext, ServiceBean.class);
-        this.clazzName = serviceBean.getInterface();
-        InterfaceConfig interfaceConfig = transForm(serviceBean);
-        this.interfaceConfig = interfaceConfig;
-        ProtocolConfig protocolConfig = WheelBeanUtils.getProtocolConfig(applicationContext, ProtocolConfig.class);
-        RegistryConfig registryConfig = WheelBeanUtils.getRegistryConfig(applicationContext, RegistryConfig.class);
-        this.ipAndPort = registryConfig.getHost()+":"+registryConfig.getPort();
+        ServiceBean[] serviceBean = WheelBeanUtils.getServiceBean(applicationContext, ServiceBean.class);
+        this.clazzNames = new String[serviceBean.length];
+        for(int i = 0;i<serviceBean.length;i++){
+            clazzNames[i] = serviceBean[i].getInterface();
+        }
+        InterfaceConfig[] interfaceConfig = transForm(serviceBean);
+        this.interfaceConfigs = interfaceConfig;
+        ProtocolConfig[] protocolConfig = WheelBeanUtils.getProtocolConfig(applicationContext, ProtocolConfig.class);
+        RegistryConfig[] registryConfig = WheelBeanUtils.getRegistryConfig(applicationContext, RegistryConfig.class);
+        // 先默认定为用户配置的第一个配置有效
+        this.ipAndPort = registryConfig[0].getHost()+":"+registryConfig[0].getPort();
         ApplicationConfig applicationConfig = WheelBeanUtils.getApplicationConfig(applicationContext, ApplicationConfig.class);
-        String ref = getRef();
-        this.ref_replace = WheelBeanUtils.getRef(applicationContext,ref);
-        WheelExporter.exportService(this.clazzName, interfaceConfig,ref_replace);
-        this.nettyPort = protocolConfig.getPort();
-        if("dubbo".equals(protocolConfig.getProtocol())){
+
+        this.ref_replaces = WheelBeanUtils.getRef(applicationContext,serviceBean);
+        WheelExporter.exportService(this.clazzNames, interfaceConfig,ref_replaces);
+        this.nettyPort = protocolConfig[0].getPort();
+        if("dubbo".equals(protocolConfig[0].getProtocol())){
             nettyServer = NettyManager.getNettyServer(nettyPort);
         }else{
-            throw new RuntimeException("unknown communicate protocol:" + protocolConfig.getProtocol());
+            throw new RuntimeException("unknown communicate protocol:" + protocolConfig[0].getProtocol());
         }
         // 判断什么类型的注册中心
         registryService = RegistryManager.getRegistryService(this.ipAndPort);
-        providerPath = "/wheel/"+interfaceConfig.getGroup()+clazzName+"/providers"+"/"+ NetUtils.getServerIp() + ":"
-                +nettyPort+"@"+serviceBean.getLoadbalance()+"_"+serviceBean.getWeight();
-        registryService.register(providerPath);
+        setProviderPath(serviceBean);
+
+        this.registry();
 
     }
 
-    public InterfaceConfig transForm(ServiceBean serviceBean){
-        InterfaceConfig interfaceConfig = new InterfaceConfig();
-        interfaceConfig.setGroup(serviceBean.getGroup());
-        interfaceConfig.setFailStrategy(serviceBean.getFailStrategy());
-        interfaceConfig.setRetryCount(serviceBean.getRetryCount());
-        interfaceConfig.setTimeout(serviceBean.getTimeout());
-        interfaceConfig.setVersion(serviceBean.getVersion());
-        return interfaceConfig;
+    private void registry(){
+        for(int i = 0;i<providerPath.length;i++){
+            registryService.register(providerPath[i]);
+        }
+    }
+    private void setProviderPath(ServiceBean[] serviceBeans){
+        providerPath = new String[serviceBeans.length];
+        for(int i = 0;i<serviceBeans.length;i++){
+            providerPath[i] = "/wheel/"+interfaceConfigs[i].getGroup()+clazzNames[i]+"/providers"+"/"+ NetUtils.getServerIp() + ":"
+                    +nettyPort+"@"+serviceBeans[i].getLoadbalance()+"_"+serviceBeans[i].getWeight();
+        }
+    }
+    public InterfaceConfig[] transForm(ServiceBean[] serviceBean){
+        InterfaceConfig[] interfaceConfigs = new InterfaceConfig[serviceBean.length];
+        for(int i = 0;i<serviceBean.length;i++){
+            interfaceConfigs[i] = new InterfaceConfig();
+            interfaceConfigs[i].setGroup(serviceBean[i].getGroup());
+            interfaceConfigs[i].setFailStrategy(serviceBean[i].getFailStrategy());
+            interfaceConfigs[i].setRetryCount(serviceBean[i].getRetryCount());
+            interfaceConfigs[i].setTimeout(serviceBean[i].getTimeout());
+            interfaceConfigs[i].setVersion(serviceBean[i].getVersion());
+        }
+
+        return interfaceConfigs;
     }
 
 
@@ -131,11 +151,16 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
         }
 
         // 需要unregister
-        registryService.unregister(providerPath);
+        this.unregister();
         // 减少引用，引用为0再关闭。这两个其实可以不移除，一般占用不会太多，client可能太多，需要移除
         RegistryManager.remove(this.ipAndPort);
         NettyManager.removeNettyServer(nettyPort);
-        WheelExporter.remove(clazzName, interfaceConfig);
+        WheelExporter.remove(clazzNames, interfaceConfigs);
+    }
+    private void unregister(){
+        for(int i = 0;i<providerPath.length;i++){
+            registryService.unregister(providerPath[i]);
+        }
     }
 
     @Override
