@@ -9,7 +9,8 @@
     <yun:application name="wheel-consumer"/>
     <yun:registry id="222" address="zookeeper://127.0.0.1:2181"/>
 
-    <bean id="wheelDemoConsumerApplication" class="com.wheel.yun.consumer.WheelDemoConsumerApplication"/>
+<!--    <bean id="wheelDemoConsumerApplication" class="com.wheel.yun.consumer.WheelDemoConsumerApplication"/>-->
 
     <yun:reference id="demoService" interface="com.wheel.yun.api.DemoService" retryCount="3" timeout="3000" version="1.0.0"/>
+    <yun:reference id="demoService2" interface="com.wheel.yun.api.DemoTwoService" retryCount="3" timeout="3000" version="1.0.0"/>
 </beans>

@@ -11,5 +11,7 @@
     <yun:protocol protocol="dubbo" port="8084"/>
 
     <bean id="demoService" class="com.wheel.yun.provider.DemoServiceImpl"/>
+    <bean id="demoService2" class="com.wheel.yun.provider.DemoTwoServiceImpl" />
     <yun:service interface="com.wheel.yun.api.DemoService" ref="demoService" retryCount="3" timeout="3000" version="1.0.0"/>
+    <yun:service interface="com.wheel.yun.api.DemoTwoService" ref="demoService2" retryCount="3" timeout="3000" version="1.0.0"/>
 </beans>
