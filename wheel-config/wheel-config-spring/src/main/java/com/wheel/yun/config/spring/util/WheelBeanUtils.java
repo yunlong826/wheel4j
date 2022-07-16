@@ -9,6 +9,7 @@ import com.wheel.yun.config.spring.ReferenceBean;
 import com.wheel.yun.config.spring.ServiceBean;
 import org.springframework.beans.factory.BeanFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,39 +38,50 @@ public class WheelBeanUtils {
     }
 
 
-    public static ServiceBean[] getServiceBean(BeanFactory beanFactory, Class<?> cls){
+    public static List<ServiceBean> getServiceBean(BeanFactory beanFactory, Class<?> cls){
         List<String> list = WheelBeanDefinitionCache.getList(cls);
-        ServiceBean[] pcs = new ServiceBean[list.size()];
+        List<ServiceBean> pcs = new ArrayList<>();
+        if(list == null || list.size() == 0)
+            return pcs;
 
         for(int i = 0;i<list.size();i++){
-            pcs[i] = (ServiceBean) beanFactory.getBean(list.get(i));
+            pcs.add((ServiceBean) beanFactory.getBean(list.get(i)));
         }
         return pcs;
     }
-    public static Object[] getRef(BeanFactory beanFactory,ServiceBean[] serviceBeans){
-        Object[] refs = new Object[serviceBeans.length];
-        for(int i = 0;i<serviceBeans.length;i++){
-            refs[i] = beanFactory.getBean(serviceBeans[i].getRef());
+    public static List<Object> getRef(BeanFactory beanFactory,List<ServiceBean> serviceBeans){
+        List<Object> refs = new ArrayList<>();
+        if(serviceBeans == null || serviceBeans.size() == 0)
+                return refs;
+        for(int i = 0;i<serviceBeans.size();i++){
+            refs.add(beanFactory.getBean(serviceBeans.get(i).getRef()));
         }
         return refs;
     }
 
-    public static ProtocolConfig[] getProtocolConfig(BeanFactory beanFactory, Class<?> cls){
+    public static List<ProtocolConfig> getProtocolConfig(BeanFactory beanFactory, Class<?> cls){
         List<String> list = WheelBeanDefinitionCache.getList(cls);
-        ProtocolConfig[] pcs = new ProtocolConfig[list.size()];
+        List<ProtocolConfig> pcs = new ArrayList<>();
 
+        if(list == null || list.size() == 0){
+            return pcs;
+        }
         for(int i = 0;i<list.size();i++){
-            pcs[i] = (ProtocolConfig) beanFactory.getBean(list.get(i));
+            pcs.add((ProtocolConfig) beanFactory.getBean(list.get(i)));
         }
         return pcs;
     }
 
-    public static RegistryConfig[] getRegistryConfig(BeanFactory beanFactory, Class<?> cls){
+    public static List<RegistryConfig> getRegistryConfig(BeanFactory beanFactory, Class<?> cls){
         List<String> list = WheelBeanDefinitionCache.getList(cls);
-        RegistryConfig[] rcs = new RegistryConfig[list.size()];
+        List<RegistryConfig> rcs = new ArrayList<>();
+
+        if(list == null || list.size() == 0){
+            return rcs;
+        }
 
         for(int i = 0;i<list.size();i++){
-            rcs[i] = (RegistryConfig) beanFactory.getBean(list.get(i));
+            rcs.add((RegistryConfig) beanFactory.getBean(list.get(i)));
         }
         return rcs;
     }

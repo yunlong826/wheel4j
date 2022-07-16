@@ -10,8 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class WheelDemoConsumerApplication {
 
-    @Reference
-    private DemoService demoService;
+
 
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("wheel-consumer.xml");
@@ -22,8 +21,6 @@ public class WheelDemoConsumerApplication {
         System.out.println(demoService.sayHello("111111111111111"));
         System.out.printf(demoService2.sayHello("111111111111111"));
     }
-    public String doSayHello(String s){
-        return demoService.sayHello(s);
-    }
+
 
 }

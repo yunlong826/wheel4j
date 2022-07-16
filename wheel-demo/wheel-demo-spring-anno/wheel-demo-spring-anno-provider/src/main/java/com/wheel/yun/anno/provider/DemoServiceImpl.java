@@ -1,7 +1,7 @@
 package com.wheel.yun.anno.provider;
 
+import com.wheel.yun.config.spring.annonation.WheelService;
 import com.wheel.yun.demo.api.DemoService;
-import org.springframework.stereotype.Service;
 
 /**
  * Description:
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  * @date 2022/7/10 15:31
  */
-@Service
+@WheelService(interfaceClass = DemoService.class)
 public class DemoServiceImpl implements DemoService {
     @Override
     public String sayHello(String hello) {
