@@ -28,6 +28,8 @@
 - [x]  支持多个负载均衡策略（哈希一致性、最少活跃次数、加权随机、加权轮询）
 - [x] 支持api的多个版本暴露
 - [x]  服务端请求线程池实现
+- [x] 服务端优雅启动，在spring容器将所有要加装的bean加载到容器后，再注册到zookeeper上
+- [x] 服务端优雅下线，在spring容器销毁前，先从zookeeper取消注册，最后关闭客户端连接。
 # 2. 待办
 - [ ]  支持多个序列化协议
 - [ ]  其他注册中心的支持 （redis）
@@ -35,28 +37,39 @@
   .......
 # 3. 工程简介
 ## 3.1 构建
-   ![img/项目.png](img/项目.png)
+   ![img/xiangmu.png](img/xiangmu.png)
+
    该项目模仿Dubbo，主要是基于Spring容器开发的一款简易版的Dubbo。使用者可以通过XML或者注解的方式进行配置相应信息。该项目使用Zookeeper作为注册中心，并且采用Netty框架进行RPC通信。该项目的主要模块如下：
+
    ![img/img.png](img/img.png)
 # 4. 搭建教程
    读者可以clone源码到本地（JDK1.8），然后本地启动zookeeper服务器（确保本地zk是可用的即可）
+
    ![img/img_1.png](img/img_1.png)
 
+
 打开wheel-demo模块：
+
 ![img/img_2.png](img/img_2.png)
+
 启动生成者服务器：
+
 ![img/img_3.png](img/img_3.png)
+
 启动后，出现下列类似日志即为成功：
+
 ![img/img_4.png](img/img_4.png)
 
 启动消费者服务器:
+
 ![img/img_5.png](img/img_5.png)
 
 出现以下类似日志即为成功：
+
 ![img/img_6.png](img/img_6.png)
 # 5. 参考资料
-[https://github.com/yunlong826/dubbo](https://github.com/yunlong826/dubbo)
+1. [https://github.com/apache/dubbo](https://github.com/apache/dubbo)
 
-[https://github.com/yunlong826/guide-rpc-framework](https://github.com/yunlong826/guide-rpc-framework)
+2. [https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework)
 
-[https://github.com/jessin20161124/miniDubboOpen](https://github.com/jessin20161124/miniDubboOpen)
+3. [https://github.com/jessin20161124/miniDubboOpen](https://github.com/jessin20161124/miniDubboOpen)
