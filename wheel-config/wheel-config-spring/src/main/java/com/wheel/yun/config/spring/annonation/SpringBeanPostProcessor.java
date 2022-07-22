@@ -13,7 +13,9 @@ import com.wheel.yun.remote.netty.NettyManager;
 import com.wheel.yun.remote.netty.server.NettyServer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -28,7 +30,7 @@ import java.util.List;
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO
+ * @description: TODO 还未进行测试
  * @date 2022/7/16 15:19
  */
 @Slf4j
@@ -52,6 +54,18 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
     private Integer nettyPort;
 
     private NettyServer nettyServer;
+
+    // 该值可以配置多个地址,英文逗号分割
+    // tg: zookeeper://127.0.0.1:2181,zookeeper://127.1.1.2:2181 ...
+    @Value("${wheel.registry.address}")
+    private String registryAddress;
+
+    // 该值可以配置多个地址,英文逗号分割
+    // tg: dubbo:8080,wheel:8081 ...
+    @Value("${wheel.protocol}")
+    private String protocol;
+
+
 
     /**
      * zk地址
@@ -138,6 +152,28 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
         String[] beanNamesForType = beanFactory.getBeanNamesForType(cls);
         for(String beanName:beanNamesForType){
             lists.add((T) beanFactory.getBean(beanName));
+        }
+        if(cls.equals(RegistryConfig.class)){
+            // tg: zookeeper://127.0.0.1:2181,zookeeper://127.1.1.2:2181 ...
+            String[] split = StringUtils.split(registryAddress, ",");
+            for(String address:split){
+                RegistryConfig registryConfig = new RegistryConfig(address);
+                lists.add((T) registryConfig);
+                beanFactory.registerSingleton(registryConfig.getClass().getName(),registryConfig);
+            }
+        }else{
+            // tg: dubbo:8080,wheel:8081 ...
+            String[] split = StringUtils.split(protocol, ",");
+            for(String p:split){
+                int idx = p.indexOf(":");
+                String agree = p.substring(0,idx);
+                String port = p.substring(idx+1);
+                ProtocolConfig protocolConfig = new ProtocolConfig();
+                protocolConfig.setProtocol(agree);
+                protocolConfig.setProtocol(port);
+                lists.add((T) protocolConfig);
+                beanFactory.registerSingleton(protocolConfig.getClass().getName(),protocolConfig);
+            }
         }
     }
 
