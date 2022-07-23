@@ -7,6 +7,7 @@ import com.wheel.yun.config.common.ReferenceProxy;
 import com.wheel.yun.config.common.RegistryConfig;
 import com.wheel.yun.config.spring.ServiceBean;
 import com.wheel.yun.config.spring.util.NetUtils;
+import com.wheel.yun.config.spring.util.PropertiesFileUtil;
 import com.wheel.yun.registry.api.RegistryManager;
 import com.wheel.yun.registry.comm.RegistryService;
 import com.wheel.yun.remote.netty.NettyManager;
@@ -15,27 +16,31 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO 还未进行测试
+ * @description:
  * @date 2022/7/16 15:19
  */
 @Slf4j
 @Component
-public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
+public class SpringBeanPostProcessor implements BeanFactoryPostProcessor, EnvironmentAware {
 
     private final List<ServiceBean> serviceBeans = new ArrayList<>();
 
@@ -47,6 +52,8 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
 
     private final List<RegistryConfig> registryConfigs = new ArrayList<>();
 
+    private Environment environment;
+
     private String ipAndPort;
 
     private final List<Object> ref_replaces = new ArrayList<>();
@@ -57,12 +64,10 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
 
     // 该值可以配置多个地址,英文逗号分割
     // tg: zookeeper://127.0.0.1:2181,zookeeper://127.1.1.2:2181 ...
-    @Value("${wheel.registry.address}")
     private String registryAddress;
 
     // 该值可以配置多个地址,英文逗号分割
     // tg: dubbo:8080,wheel:8081 ...
-    @Value("${wheel.protocol}")
     private String protocol;
 
 
@@ -78,6 +83,11 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 
+        Properties properties = PropertiesFileUtil.readPropertiesFile("application.properties");
+
+        setRegistryAddress(properties.getProperty("wheel.registry.address"));
+
+        setProtocol(properties.getProperty("wheel.protocol"));
         setConfigs(beanFactory,ProtocolConfig.class,protocolConfigs);
 
         setConfigs(beanFactory,RegistryConfig.class,registryConfigs);
@@ -89,6 +99,22 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
         postReferenceBeanPostProcess(beanFactory);
 
 
+    }
+
+    public String getRegistryAddress() {
+        return registryAddress;
+    }
+
+    public void setRegistryAddress(String registryAddress) {
+        this.registryAddress = registryAddress;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
     private void postReferenceBeanPostProcess(ConfigurableListableBeanFactory beanFactory) {
@@ -156,6 +182,8 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
         if(cls.equals(RegistryConfig.class)){
             // tg: zookeeper://127.0.0.1:2181,zookeeper://127.1.1.2:2181 ...
             String[] split = StringUtils.split(registryAddress, ",");
+            if(split == null || split.length == 0)
+                return;
             for(String address:split){
                 RegistryConfig registryConfig = new RegistryConfig(address);
                 lists.add((T) registryConfig);
@@ -164,6 +192,8 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
         }else{
             // tg: dubbo:8080,wheel:8081 ...
             String[] split = StringUtils.split(protocol, ",");
+            if(split == null || split.length == 0)
+                return;
             for(String p:split){
                 int idx = p.indexOf(":");
                 String agree = p.substring(0,idx);
@@ -244,5 +274,13 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor {
             interfaceConfigs.add(interfaceConfig);
         }
 
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+    public Environment getEnvironment(){
+        return this.environment;
     }
 }
