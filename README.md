@@ -31,6 +31,7 @@
 - [x] 服务端优雅启动，在spring容器将所有要加装的bean加载到容器后，再注册到zookeeper上
 - [x] 服务端优雅下线，在spring容器销毁前，先从zookeeper取消注册，最后关闭客户端连接。
 - [x] 支持注解方式配置
+- [x] 支持application.properties文件配置注册中心与protocol
 # 2. 待办
 - [ ]  支持多个序列化协议
 - [ ]  其他注册中心的支持 （redis）
