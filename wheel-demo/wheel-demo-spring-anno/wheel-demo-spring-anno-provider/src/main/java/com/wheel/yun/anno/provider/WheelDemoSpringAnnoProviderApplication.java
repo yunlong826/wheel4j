@@ -26,28 +26,28 @@ public class WheelDemoSpringAnnoProviderApplication {
 	@WheelScan(basePackage = "com.wheel.yun.anno.provider")
 	@ComponentScan(value = "com.wheel.yun.anno.provider")
 	static class ProviderConfiguration {
-
-		@Bean(name = "registry1")
-		public RegistryConfig registryConfig(){
-			RegistryConfig registryConfig = new RegistryConfig();
-			registryConfig.setAddress("zookeeper://127.0.0.1:2181");
-			return registryConfig;
-		}
-
-		@Bean
-		public ApplicationConfig applicationConfig(){
-			ApplicationConfig applicationConfig = new ApplicationConfig();
-			applicationConfig.setName("demo-anno-provider");
-			return applicationConfig;
-		}
-
-		@Bean
-		public ProtocolConfig protocolConfig(){
-			ProtocolConfig protocolConfig = new ProtocolConfig();
-			protocolConfig.setProtocol("dubbo");
-			protocolConfig.setPort(8084);
-			return protocolConfig;
-		}
+//      注释下列信息是为了测试application.properties文件下配置下列相关信息。
+//		@Bean(name = "registry1")
+//		public RegistryConfig registryConfig(){
+//			RegistryConfig registryConfig = new RegistryConfig();
+//			registryConfig.setAddress("zookeeper://127.0.0.1:2181");
+//			return registryConfig;
+//		}
+//
+//		@Bean
+//		public ApplicationConfig applicationConfig(){
+//			ApplicationConfig applicationConfig = new ApplicationConfig();
+//			applicationConfig.setName("demo-anno-provider");
+//			return applicationConfig;
+//		}
+//
+//		@Bean
+//		public ProtocolConfig protocolConfig(){
+//			ProtocolConfig protocolConfig = new ProtocolConfig();
+//			protocolConfig.setProtocol("dubbo");
+//			protocolConfig.setPort(8084);
+//			return protocolConfig;
+//		}
 
 	}
 

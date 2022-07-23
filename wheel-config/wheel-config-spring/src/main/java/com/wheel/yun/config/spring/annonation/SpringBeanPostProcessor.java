@@ -200,7 +200,7 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor, Enviro
                 String port = p.substring(idx+1);
                 ProtocolConfig protocolConfig = new ProtocolConfig();
                 protocolConfig.setProtocol(agree);
-                protocolConfig.setProtocol(port);
+                protocolConfig.setPort(Integer.valueOf(port));
                 lists.add((T) protocolConfig);
                 beanFactory.registerSingleton(protocolConfig.getClass().getName(),protocolConfig);
             }
