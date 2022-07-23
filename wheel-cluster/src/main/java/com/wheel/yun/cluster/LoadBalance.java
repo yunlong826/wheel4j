@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO 负载均衡接口
+ * @description:  负载均衡接口
  * @date 2022/7/4 16:52
  */
 public interface LoadBalance {
