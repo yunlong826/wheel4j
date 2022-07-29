@@ -9,6 +9,7 @@ public enum ResultEnumCode {
     SUCCESS(200, "请求成功"),
     SUCCESS_login(200, "用户登录成功"),
     SUCCESS_logout(200, "用户退出成功"),
+    SUCCESS_CREATE_USER(200,"账户注册成功，角色注册成功！"),
 
     /* 默认失败 */
     COMMON_FAIL(999, "失败"),
@@ -31,7 +32,13 @@ public enum ResultEnumCode {
     USER_ACCOUNT_USE_BY_OTHERS(2009, "账号下线"),
 
     /* 业务错误 */
-    NO_PERMISSION(3001, "当前账号没有此权限");
+    NO_PERMISSION(3001, "当前账号没有此权限"),
+
+    /* 添加用户错误*/
+    CREATE_USERROLE_FAIL(3002,"账户添加成功，角色添加失败！"),
+
+    CREATE_USER_FAIL(3003,"添加用户成功");
+
     private Integer code;
     private String message;
 

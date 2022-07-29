@@ -57,6 +57,7 @@ public class SecurityUserServiceImpl implements SecurityUserService {
             grantedAuthorities.add(grantedAuthority);
         });
 
-        return new User(sysUser.getAccount(), sysUser.getPassword(), sysUser.getEnabled(), sysUser.getNotExpired(), sysUser.getCredentialsNotExpired(), sysUser.getAccountNotLocked(), grantedAuthorities);
+        User user = new User(sysUser.getAccount(), sysUser.getPassword(), sysUser.getEnabled(), sysUser.getNotExpired(), sysUser.getCredentialsNotExpired(), sysUser.getAccountNotLocked(), grantedAuthorities);
+        return user;
     }
 }
