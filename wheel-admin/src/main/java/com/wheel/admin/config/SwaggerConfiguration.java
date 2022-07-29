@@ -45,9 +45,9 @@ public class SwaggerConfiguration {
     }
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("cheetah平台")
-                .description("消息推送接口接口文档")
-                .contact(new Contact("3y", "http://github.com/yunlong826/wheel4j/tree/develop", "1653812264@qq.com"))
+                .title("wheel管理平台")
+                .description("wheel接口接口文档")
+                .contact(new Contact("yun", "http://github.com/yunlong826/wheel4j/tree/develop", "1653812264@qq.com"))
                 .version("v1.0")
                 .build();
     }
