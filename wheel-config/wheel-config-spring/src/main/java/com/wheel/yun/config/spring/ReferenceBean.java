@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO
+ * @description:
  * @date 2022/5/30 16:13
  */
 @Slf4j
@@ -118,7 +118,10 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements BeanFactoryP
         if(group == null || group.length() == 0)
             group = "DEFAULT_GROUP";
         interfaceConfig.setGroup(group);
-        interfaceConfig.setVersion(ref.getVersion());
+        String version =  ref.getVersion();
+        if(version == null || version.length() == 0)
+            version = "1.0.0";
+        interfaceConfig.setVersion(version);
         interfaceConfig.setTimeout(ref.getTimeout());
         interfaceConfig.setFailStrategy(ref.getFailStrategy());
         interfaceConfig.setRetryCount(ref.getRetryCount());
