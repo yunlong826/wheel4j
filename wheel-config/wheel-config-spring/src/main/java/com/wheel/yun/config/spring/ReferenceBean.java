@@ -114,7 +114,10 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements BeanFactoryP
     }
     private InterfaceConfig transform(ReferenceBean ref) {
         InterfaceConfig interfaceConfig = new InterfaceConfig();
-        interfaceConfig.setGroup(ref.getGroup());
+        String group = ref.getGroup();
+        if(group == null || group.length() == 0)
+            group = "DEFAULT_GROUP";
+        interfaceConfig.setGroup(group);
         interfaceConfig.setVersion(ref.getVersion());
         interfaceConfig.setTimeout(ref.getTimeout());
         interfaceConfig.setFailStrategy(ref.getFailStrategy());
