@@ -10,7 +10,7 @@ import com.wheel.admin.enums.ResultEnumCode;
  * @version 1.0
  * @date 2022/7/29 18:48
  */
-public class ResultWrapper {
+public class ResultWrapper<T> {
     public static ResultDto success() {
         return new ResultDto(true);
     }
