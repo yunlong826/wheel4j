@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO
+ * @description:
  * @date 2022/5/29 14:35
  */
 @Slf4j
@@ -135,7 +135,8 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
         providerPath = new ArrayList<>();
         for(int i = 0;i<serviceBeans.size();i++){
             String group = interfaceConfigs.get(i).getGroup();
-            providerPath.add("/wheel/"+group+"/"+clazzNames.get(i)+"/providers"+"/"+ NetUtils.getServerIp() + ":"
+            String version =  interfaceConfigs.get(i).getVersion();
+            providerPath.add("/wheel/"+group+"&"+clazzNames.get(i)+"&"+version+"&"+"providers"+"/"+ NetUtils.getServerIp() + ":"
                     +nettyPort+"@"+serviceBeans.get(i).getLoadbalance()+"_"+serviceBeans.get(i).getWeight());
         }
     }
@@ -150,7 +151,10 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
             interfaceConfig.setFailStrategy(serviceBean.get(i).getFailStrategy());
             interfaceConfig.setRetryCount(serviceBean.get(i).getRetryCount());
             interfaceConfig.setTimeout(serviceBean.get(i).getTimeout());
-            interfaceConfig.setVersion(serviceBean.get(i).getVersion());
+            String version =  interfaceConfig.getVersion();
+            if(version == null || version.length() == 0)
+                version = "1.0.0";
+            interfaceConfig.setVersion(version);
             interfaceConfigs.add(interfaceConfig);
         }
 
