@@ -37,7 +37,10 @@ public enum ResultEnumCode {
     /* 添加用户错误*/
     CREATE_USERROLE_FAIL(3002,"账户添加成功，角色添加失败！"),
 
-    CREATE_USER_FAIL(3003,"添加用户成功");
+    CREATE_USER_FAIL(3003,"添加用户成功"),
+
+    /*一个账号多个用户同时登录*/
+    SESSION_SAME_LOGIN(3004,"已经另一台机器登录，您被迫下线。");
 
     private Integer code;
     private String message;

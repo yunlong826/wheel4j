@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2022/7/29 20:38
  */
+@Component
 public class WheelAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
