@@ -1,15 +1,19 @@
 package com.wheel.admin.config;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.models.auth.In;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Description: swagger 配置
@@ -41,7 +45,9 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage("com.wheel.admin"))
                 //正则匹配请求路径，并分配到当前项目组
                 //.paths(PathSelectors.ant("/api/**"))
-                .build();
+                .build()
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts());
     }
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
@@ -50,5 +56,18 @@ public class SwaggerConfiguration {
                 .contact(new Contact("yun", "http://github.com/yunlong826/wheel4j/tree/develop", "1653812264@qq.com"))
                 .version("v1.0")
                 .build();
+    }
+
+    private List<SecurityContext> securityContexts() {
+        return Collections.singletonList(
+                SecurityContext.builder()
+                        .securityReferences(Collections.singletonList(new SecurityReference("BASE_TOKEN", new AuthorizationScope[]{new AuthorizationScope("global", "")})))
+                        .build()
+        );
+    }
+
+    private List<SecurityScheme> securitySchemes() {
+        ApiKey apiKey = new ApiKey("BASE_TOKEN", "UserToken", In.HEADER.toValue());
+        return Collections.singletonList(apiKey);
     }
 }
