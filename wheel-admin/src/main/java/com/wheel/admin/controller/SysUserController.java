@@ -109,7 +109,6 @@ public class SysUserController {
     /**
      *
      *
-     * @param sysUser
      * @return com.wheel.admin.dto.ResultDto
      * @author long_yun
      * @date 2022/7/30 12:01
