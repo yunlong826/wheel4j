@@ -61,13 +61,13 @@ public class SwaggerConfiguration {
     private List<SecurityContext> securityContexts() {
         return Collections.singletonList(
                 SecurityContext.builder()
-                        .securityReferences(Collections.singletonList(new SecurityReference("BASE_TOKEN", new AuthorizationScope[]{new AuthorizationScope("global", "")})))
+                        .securityReferences(Collections.singletonList(new SecurityReference("UserToken", new AuthorizationScope[]{new AuthorizationScope("global", "")})))
                         .build()
         );
     }
 
     private List<SecurityScheme> securitySchemes() {
-        ApiKey apiKey = new ApiKey("BASE_TOKEN", "UserToken", In.HEADER.toValue());
+        ApiKey apiKey = new ApiKey("UserToken", "UserToken", In.HEADER.toValue());
         return Collections.singletonList(apiKey);
     }
 }

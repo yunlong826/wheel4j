@@ -60,7 +60,7 @@ public class SysRoleController {
     @SystemLogController(description = "绑定角色")
     public ResultDto<String> bindRoles(@RequestParam("roleName") String roleName,@RequestParam("account") String account){
         SysRole sysRole = sysRoleMapper.selectOne(new LambdaQueryWrapper<SysRole>().eq(SysRole::getRoleName, roleName));
-        SysUser byId = sysUserService.getById(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));
+        SysUser byId = sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));
         if(sysRole == null){
             return ResultWrapper.fail(ResultEnumCode.PARAM_NOT_VALID);
         }

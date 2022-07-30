@@ -17,6 +17,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -52,6 +54,7 @@ public class SecurityUserServiceImpl implements SecurityUserService {
 
         List<SysPermission> sysPermissions = sysPermissionService.getUserRolesByUserId(String.valueOf(sysUser.getId()));
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        sysPermissions = sysPermissions.stream().filter(Objects::nonNull).collect(Collectors.toList());
         sysPermissions.stream().forEach(sysPermission -> {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(sysPermission.getPermissionCode());
             grantedAuthorities.add(grantedAuthority);

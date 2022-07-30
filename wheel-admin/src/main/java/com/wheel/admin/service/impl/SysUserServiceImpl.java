@@ -69,6 +69,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public Integer deleteUserById(String userId) {
         int delete = sysRoleUserMapper.delete(new LambdaQueryWrapper<SysUserRoleRelation>().eq(SysUserRoleRelation::getUserId, userId));
         int delete1 = sysUserMapper.delete(new LambdaQueryWrapper<SysUser>().eq(SysUser::getId, userId));
-        return delete == 1&&delete1 == 1?1:0;
+        return delete1 == 1?1:0;
     }
 }

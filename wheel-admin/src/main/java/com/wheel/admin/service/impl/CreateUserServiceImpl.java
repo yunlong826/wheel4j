@@ -2,6 +2,7 @@ package com.wheel.admin.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wheel.admin.annotation.SystemLogService;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.enums.ResultEnumCode;
@@ -13,10 +14,12 @@ import com.wheel.admin.service.CreateUserService;
 import com.wheel.admin.service.SysUserService;
 import com.wheel.admin.wrapper.ResultWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,7 +43,8 @@ public class CreateUserServiceImpl implements CreateUserService {
     @SystemLogService(description = "addUserByUsername")
     @Override
     public ResultDto addUserByUsername(SysUser userRegister, String createUserId){
-        SysUser newuser = (SysUser) securityUserService.loadUserByUsername(userRegister.getAccount());
+
+        SysUser newuser = sysUserService.getOne(new QueryWrapper<SysUser>().lambda().eq(SysUser::getAccount, userRegister.getAccount()));
         if (newuser != null){
             return ResultWrapper.fail(ResultEnumCode.USER_ACCOUNT_ALREADY_EXIST);
         }else {
@@ -52,8 +56,9 @@ public class CreateUserServiceImpl implements CreateUserService {
             userRegister.setCreateTime(LocalDateTime.now());
             userRegister.setAccountNotLocked(true);
             userRegister.setNotExpired(true);
+            userRegister.setUpdateTime(LocalDateTime.now());
             //执行用户注册
-            boolean adduser = sysUserService.saveOrUpdate(newuser);
+            boolean adduser = sysUserService.saveOrUpdate(userRegister);
             //用户成功注册后，添加用户角色
             if(adduser){
                 return ResultWrapper.success(ResultEnumCode.SUCCESS_CREATE_USER);
