@@ -58,7 +58,6 @@ public class SysUser {
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "创建人")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Integer createUser;
 

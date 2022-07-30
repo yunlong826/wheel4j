@@ -11,5 +11,5 @@ import com.wheel.admin.model.SysUser;
  * @date 2022/7/29 23:51
  */
 public interface CreateUserService{
-    ResultDto addUserByUsername(SysUser userRegister, String roleId, String createUserId);
+    ResultDto addUserByUsername(SysUser userRegister, String createUserId);
 }

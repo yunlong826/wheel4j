@@ -1,6 +1,7 @@
 package com.wheel.admin.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.enums.ResultEnumCode;
 import com.wheel.admin.mapper.SysRoleUserMapper;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author jack_yun
@@ -35,7 +37,7 @@ public class CreateUserServiceImpl implements CreateUserService {
     private SysRoleUserMapper sysRoleUserMapper;
 
     @Override
-    public ResultDto addUserByUsername(SysUser userRegister, String roleId, String createUserId){
+    public ResultDto addUserByUsername(SysUser userRegister, String createUserId){
         SysUser newuser = (SysUser) securityUserService.loadUserByUsername(userRegister.getAccount());
         if (newuser != null){
             return ResultWrapper.fail(ResultEnumCode.USER_ACCOUNT_ALREADY_EXIST);
@@ -52,16 +54,7 @@ public class CreateUserServiceImpl implements CreateUserService {
             boolean adduser = sysUserService.saveOrUpdate(newuser);
             //用户成功注册后，添加用户角色
             if(adduser){
-                SysUser getuser = (SysUser) securityUserService.loadUserByUsername(userRegister.getAccount());
-                SysUserRoleRelation sysUserRoleRelation = new SysUserRoleRelation();
-                sysUserRoleRelation.setUserId(getuser.getId());
-                sysUserRoleRelation.setRoleId(Integer.valueOf(roleId));
-                int addrole = sysRoleUserMapper.insert(sysUserRoleRelation);
-                if (addrole > 0){
-                    return ResultWrapper.success(ResultEnumCode.SUCCESS_CREATE_USER);
-                }else{
-                    return ResultWrapper.fail(ResultEnumCode.CREATE_USERROLE_FAIL);
-                }
+                return ResultWrapper.success(ResultEnumCode.SUCCESS_CREATE_USER);
             }else {
                 return ResultWrapper.fail(ResultEnumCode.CREATE_USER_FAIL);
             }
