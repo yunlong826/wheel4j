@@ -1,6 +1,7 @@
 package com.wheel.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.wheel.admin.annotation.SystemLogController;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.enums.ResultEnumCode;
 import com.wheel.admin.model.SysUser;
@@ -42,6 +43,7 @@ public class SysUserController {
 
     @ApiOperation(value = "分页查询用户列表",notes = "如果该用户为管理员，分页显示所有用户，非管理员，显示该用户创建的用户列表")
     @GetMapping("/pageUsers")
+    @SystemLogController(description = "分页查询用户列表")
     public ResultDto<IPage<SysUser>> pageUsers(@RequestBody IPage<SysUser> page, String userId){
 
         IPage<SysUser> sysUserIPage = sysUserService.pageUsersByUserId(page, userId);;
@@ -61,6 +63,7 @@ public class SysUserController {
 
     @ApiOperation(value = "创建用户")
     @PostMapping("/createUser")
+    @SystemLogController(description = "创建用户")
     public ResultDto createUser(@RequestBody SysUser sysUser,@RequestParam("userId") String createUserId){
         ResultDto resultDto = createUserService.addUserByUsername(sysUser, createUserId);
         return resultDto;
@@ -78,6 +81,7 @@ public class SysUserController {
     
     @ApiOperation(value = "删除用户")
     @PostMapping("/deleteUser")
+    @SystemLogController(description = "删除用户")
     public ResultDto deletUser(@RequestParam("userId") String userId){
         Integer integer = sysUserService.deleteUserById(userId);
         if(integer == 1){
@@ -98,6 +102,7 @@ public class SysUserController {
 
     @ApiOperation(value = "修改用户")
     @PostMapping("/editUser")
+    @SystemLogController(description = "修改用户")
     public ResultDto editUser(@RequestBody SysUser sysUser){
         boolean b = sysUserService.updateById(sysUser);
         if(b){

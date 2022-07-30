@@ -1,6 +1,7 @@
 package com.wheel.admin.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wheel.admin.annotation.SystemLogService;
 import com.wheel.admin.mapper.SysLogMapper;
 import com.wheel.admin.model.SysLog;
 import com.wheel.admin.service.SysLogService;
@@ -18,6 +19,7 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
     @Autowired
     private SysLogMapper sysLogMapper;
 
+    @SystemLogService(description = "insertSysLog")
     @Override
     public void insertSysLog(SysLog sysLog) {
         sysLogMapper.insert(sysLog);

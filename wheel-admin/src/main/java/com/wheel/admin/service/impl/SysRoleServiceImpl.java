@@ -2,6 +2,7 @@ package com.wheel.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wheel.admin.annotation.SystemLogService;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.dto.SysUserRoleDto;
 import com.wheel.admin.mapper.SysRoleMapper;
@@ -36,6 +37,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper,SysRole> imple
     @Autowired
     private SysUserService sysUserService;
 
+    @SystemLogService(description = "listUserRole")
     @Override
     public ResultDto<List<SysUserRoleDto>> listUserRole(String userId) {
         List<SysUserRoleRelation> sysUserRoleRelations = sysRoleUserMapper.selectList(new LambdaQueryWrapper<SysUserRoleRelation>().eq(SysUserRoleRelation::getUserId,userId));

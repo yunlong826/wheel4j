@@ -3,6 +3,7 @@ package com.wheel.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wheel.admin.annotation.SystemLogService;
 import com.wheel.admin.mapper.SysRoleMapper;
 import com.wheel.admin.mapper.SysRoleUserMapper;
 import com.wheel.admin.mapper.SysUserMapper;
@@ -36,6 +37,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private SysRoleMapper sysRoleMapper;
 
+    @SystemLogService(description = "pageUsersByUserId")
     @Override
     public IPage<SysUser> pageUsersByUserId(IPage<SysUser> condition, String userId) {
         List<SysUserRoleRelation> sysUserRoleRelations = sysRoleUserMapper.selectList(new LambdaQueryWrapper<SysUserRoleRelation>().eq(SysUserRoleRelation::getUserId,userId));
@@ -62,6 +64,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     }
 
+    @SystemLogService(description = "deleteUserById")
     @Override
     public Integer deleteUserById(String userId) {
         int delete = sysRoleUserMapper.delete(new LambdaQueryWrapper<SysUserRoleRelation>().eq(SysUserRoleRelation::getUserId, userId));

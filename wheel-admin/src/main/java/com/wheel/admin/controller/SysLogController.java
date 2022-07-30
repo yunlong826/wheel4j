@@ -2,6 +2,7 @@ package com.wheel.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.wheel.admin.annotation.SystemLogController;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.model.SysLog;
 import com.wheel.admin.service.SysLogService;
@@ -38,6 +39,7 @@ public class SysLogController {
     
     @ApiOperation(value = "展示用户操作日志")
     @GetMapping("/pageSysLogs")
+    @SystemLogController(description = "展示用户操作日志")
     public ResultDto<IPage<SysLog>> pageSysLogs(@RequestBody IPage<SysLog> condition,@RequestParam("account") String account){
         IPage<SysLog> page1 = sysLogService.page(condition, new LambdaQueryWrapper<SysLog>().eq(SysLog::getUsername, account));
         return ResultWrapper.success(page1);

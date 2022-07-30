@@ -2,6 +2,7 @@ package com.wheel.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.wheel.admin.annotation.SystemLogController;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.dto.SysUserRoleDto;
 import com.wheel.admin.enums.ResultEnumCode;
@@ -48,6 +49,7 @@ public class SysRoleController {
 
     @ApiOperation(value = "查询用户名与用户角色")
     @GetMapping("/listUserRole")
+    @SystemLogController(description = "查询用户名与用户角色")
     public ResultDto<List<SysUserRoleDto>> listUserRole( @RequestParam("userId") String userId){
 
         return sysRoleService.listUserRole(userId);
@@ -55,6 +57,7 @@ public class SysRoleController {
 
     @ApiOperation(value = "绑定角色")
     @PostMapping("/bindRoles")
+    @SystemLogController(description = "绑定角色")
     public ResultDto<String> bindRoles(@RequestParam("roleName") String roleName,@RequestParam("account") String account){
         SysRole sysRole = sysRoleMapper.selectOne(new LambdaQueryWrapper<SysRole>().eq(SysRole::getRoleName, roleName));
         SysUser byId = sysUserService.getById(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));

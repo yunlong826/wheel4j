@@ -2,6 +2,7 @@ package com.wheel.admin.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wheel.admin.annotation.SystemLogService;
 import com.wheel.admin.mapper.SysPermissionMapper;
 import com.wheel.admin.model.SysPermission;
 import com.wheel.admin.service.SysPermissionService;
@@ -23,11 +24,13 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper,Sy
     @Autowired
     private SysPermissionMapper sysPermissionMapper;
 
+    @SystemLogService(description = "getUserRolesByUserId")
     @Override
     public List<SysPermission> getUserRolesByUserId(String userId) {
         return sysPermissionMapper.getUserRolesByUserId(userId);
     }
 
+    @SystemLogService(description = "selectListByPath")
     @Override
     public List<SysPermission> selectListByPath(String requestUrl) {
         return sysPermissionMapper.selectListByPath(requestUrl);

@@ -2,6 +2,7 @@ package com.wheel.admin.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.wheel.admin.annotation.SystemLogService;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.enums.ResultEnumCode;
 import com.wheel.admin.mapper.SysRoleUserMapper;
@@ -36,6 +37,7 @@ public class CreateUserServiceImpl implements CreateUserService {
     @Autowired
     private SysRoleUserMapper sysRoleUserMapper;
 
+    @SystemLogService(description = "addUserByUsername")
     @Override
     public ResultDto addUserByUsername(SysUser userRegister, String createUserId){
         SysUser newuser = (SysUser) securityUserService.loadUserByUsername(userRegister.getAccount());
