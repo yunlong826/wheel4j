@@ -5,6 +5,7 @@ import com.wheel.admin.registry.zk.service.ChildListener;
 import com.wheel.admin.registry.zk.service.DataListener;
 import com.wheel.admin.registry.zk.store.ZkDataStore;
 import com.wheel.admin.registry.utils.Pair;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -21,6 +22,7 @@ import org.apache.zookeeper.WatchedEvent;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class CuratorZookeeperClient {
     }
 
     private void recover() {
-        long delayRecoverMillis = 3000;
+        long delayRecoverMillis = 30000;
         scheduledExecutorService.schedule(() -> {
             try {
                 log.info("恢复zk现场");
@@ -173,20 +175,52 @@ public class CuratorZookeeperClient {
     public List<String> addTargetChildListener(String path, CuratorWatcherImpl listener) {
         try {
             List<String> ret = client.getChildren().usingWatcher(listener).forPath(path);
+            List<String> list = new ArrayList<>();
             ZkDataStore.ZKDATA.clear();
-            ZkDataStore.ZKDATA.addAll(ret);
+            String temp = path;
+            setZkNodesPath(ZkDataStore.ZKDATA,temp,list);
             // todo 一个path暂时只能注册一个child watcher
             childListenerMap.put(path, listener);
+            log.info("ZkDataStore.ZKDATA的数据:{}",ZkDataStore.ZKDATA);
             log.info("添加zk路径ChildListener：{}，得到子节点：{}", path, ret);
             // 第一次需要手动调用，恢复现场也需要调用
             listener.childListener.childChanged(path, ret);
             return ret;
         } catch (KeeperException.NoNodeException e) {
+            log.info("KeeperException.NoNodeException e:{}",path);
             return null;
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
+
+    /**
+     *  一个多叉树递归小算法
+     * @param zkdata
+     * @param path
+     * @param list
+     */
+    @SneakyThrows
+    private void setZkNodesPath(List<String> zkdata, String path,List<String> list) {
+        List<String> childrens = client.getChildren().forPath(path);
+        if(childrens == null || childrens.size() == 0){
+            zkdata.add(listToString(list));
+            return;
+        }
+        for(String child:childrens){
+            list.add("/"+child);
+            setZkNodesPath(zkdata,path+"/"+child,list);
+            list.remove(list.size()-1);
+        }
+    }
+    private String listToString(List<String> list){
+        String s = "";
+        for(int i = 0;i<list.size();i++){
+            s+=list.get(i);
+        }
+        return s;
+    }
+
     public void doClose() {
         log.info("关闭zk");
         client.close();

@@ -40,7 +40,7 @@ public class RegistryDirectory implements ChildListener {
         this.interfaceConfig = interfaceConfig;
         this.registryAddress = registry;
         // 监听group/接口名/providers，有变化时通知RegistryDirectory，也就是调用notify(url, listener, urls);
-        this.providerPath = "/wheel/"+interfaceConfig.getGroup()+"/"+path + "/providers";
+        this.providerPath = "/wheel/"+interfaceConfig.getGroup()+"&"+ path + "&" +interfaceConfig.getVersion()+ "&" +"providers";
 
         // 判断zk/redis。创建zk连接，并创建RegistryDirectory，第一次时创建DubboInvoker
         registryService = RegistryManager.getRegistryService(registryAddress);
