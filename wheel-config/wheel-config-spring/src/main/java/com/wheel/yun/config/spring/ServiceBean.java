@@ -134,7 +134,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
     private void setProviderPath(List<ServiceBean> serviceBeans){
         providerPath = new ArrayList<>();
         for(int i = 0;i<serviceBeans.size();i++){
-            providerPath.add("/wheel/"+interfaceConfigs.get(i).getGroup()+clazzNames.get(i)+"/providers"+"/"+ NetUtils.getServerIp() + ":"
+            providerPath.add("/wheel/"+interfaceConfigs.get(i).getGroup()+"/"+clazzNames.get(i)+"/providers"+"/"+ NetUtils.getServerIp() + ":"
                     +nettyPort+"@"+serviceBeans.get(i).getLoadbalance()+"_"+serviceBeans.get(i).getWeight());
         }
     }
