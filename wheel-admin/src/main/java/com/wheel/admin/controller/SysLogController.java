@@ -2,6 +2,7 @@ package com.wheel.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wheel.admin.annotation.SystemLogController;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.model.SysLog;
@@ -25,23 +26,22 @@ public class SysLogController {
 
     @Autowired
     private SysLogService sysLogService;
-    
+
     /**
      *
      *
-     * @param condition 
-     * @param account 
-     * @return com.wheel.admin.dto.ResultDto<com.baomidou.mybatisplus.core.metadata.IPage<com.wheel.admin.model.SysLog>> 
+     * @param account 账户
+     * @return com.wheel.admin.dto.ResultDto<com.baomidou.mybatisplus.core.metadata.IPage<com.wheel.admin.model.SysLog>>
      * @author long_yun
-     * @date 2022/7/30 13:06 
+     * @date 2022/7/30 13:06
      * @describe
      */
-    
+
     @ApiOperation(value = "展示用户操作日志")
-    @GetMapping("/pageSysLogs")
+    @PostMapping("/pageSysLogs")
     @SystemLogController(description = "展示用户操作日志")
-    public ResultDto<IPage<SysLog>> pageSysLogs(@RequestBody IPage<SysLog> condition,@RequestParam("account") String account){
-        IPage<SysLog> page1 = sysLogService.page(condition, new LambdaQueryWrapper<SysLog>().eq(SysLog::getUsername, account));
+    public ResultDto<IPage<SysLog>> pageSysLogs(@RequestBody Page page, @RequestParam("account") String account){
+        IPage<SysLog> page1 = sysLogService.page(page, new LambdaQueryWrapper<SysLog>().eq(SysLog::getUsername, account));
         return ResultWrapper.success(page1);
     }
 
