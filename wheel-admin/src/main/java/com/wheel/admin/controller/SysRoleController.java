@@ -6,6 +6,7 @@ import com.wheel.admin.annotation.SystemLogController;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.dto.SysUserRoleDto;
 import com.wheel.admin.enums.ResultEnumCode;
+import com.wheel.admin.exception.UserException;
 import com.wheel.admin.mapper.SysRoleMapper;
 import com.wheel.admin.mapper.SysRoleUserMapper;
 import com.wheel.admin.model.SysRole;
@@ -62,18 +63,20 @@ public class SysRoleController {
         SysRole sysRole = sysRoleMapper.selectOne(new LambdaQueryWrapper<SysRole>().eq(SysRole::getRoleName, roleName));
         SysUser byId = sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));
         if(sysRole == null){
-            return ResultWrapper.fail(ResultEnumCode.PARAM_NOT_VALID);
+            throw new UserException(ResultEnumCode.USER_ROLE_GET_FAIL.getCode()
+                                    ,ResultEnumCode.USER_ROLE_GET_FAIL.getMessage());
         }
         SysUserRoleRelation sysUserRoleRelation = new SysUserRoleRelation();
 
         sysUserRoleRelation.setRoleId(sysRole.getId());
         sysUserRoleRelation.setUserId(byId.getId());
         boolean b = sysRoleUserService.saveOrUpdate(sysUserRoleRelation);
-        if(b){
-            return ResultWrapper.success();
-        }else{
-            return ResultWrapper.fail(ResultEnumCode.PARAM_NOT_VALID);
+        if(!b){
+            throw new UserException(ResultEnumCode.BIND_USER_ROLE_FAIL.getCode()
+                                    ,ResultEnumCode.BIND_USER_ROLE_FAIL.getMessage());
         }
+        return ResultWrapper.success();
+
 
     }
 }

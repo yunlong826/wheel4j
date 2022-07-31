@@ -3,6 +3,8 @@ package com.wheel.admin.controller;
 
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.dto.ZKDto;
+import com.wheel.admin.enums.ResultEnumCode;
+import com.wheel.admin.exception.RegistryException;
 import com.wheel.admin.registry.zk.store.ZkDataStore;
 import com.wheel.admin.utils.StringToZKDto;
 import com.wheel.admin.wrapper.ResultWrapper;
@@ -42,6 +44,10 @@ public class ZkController {
     @GetMapping("/zkLists")
     public ResultDto<List<ZKDto>> zkLists(){
         List<String> zkdata = ZkDataStore.ZKDATA;
+        if(zkdata.size() == 0){
+            throw new RegistryException(ResultEnumCode.ZKDATA_NULL.getCode()
+                                        ,ResultEnumCode.ZKDATA_NULL.getMessage());
+        }
         List<ZKDto> list = StringToZKDto.string2ZKDtoLists(zkdata);
         return ResultWrapper.success(list);
     }

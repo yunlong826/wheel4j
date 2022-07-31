@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wheel.admin.annotation.SystemLogService;
+import com.wheel.admin.enums.ResultEnumCode;
+import com.wheel.admin.exception.UserException;
 import com.wheel.admin.mapper.SysRoleMapper;
 import com.wheel.admin.mapper.SysRoleUserMapper;
 import com.wheel.admin.mapper.SysUserMapper;
@@ -69,6 +71,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public Integer deleteUserById(String userId) {
         int delete = sysRoleUserMapper.delete(new LambdaQueryWrapper<SysUserRoleRelation>().eq(SysUserRoleRelation::getUserId, userId));
         int delete1 = sysUserMapper.delete(new LambdaQueryWrapper<SysUser>().eq(SysUser::getId, userId));
-        return delete1 == 1?1:0;
+        // 删除用户失败
+        if(delete1 == 0){
+            // 抛出用户相关异常信息
+            throw new UserException(ResultEnumCode.USER_DELETE_FAIL.getCode()
+                                    ,ResultEnumCode.USER_DELETE_FAIL.getMessage());
+        }
+        return delete1;
     }
 }

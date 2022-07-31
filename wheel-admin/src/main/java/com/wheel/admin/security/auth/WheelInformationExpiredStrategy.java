@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.enums.ResultEnumCode;
+import com.wheel.admin.exception.UserException;
 import com.wheel.admin.wrapper.ResultWrapper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.stereotype.Component;
@@ -27,7 +30,12 @@ public class WheelInformationExpiredStrategy implements SessionInformationExpire
     @Override
     public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
         ResultDto result = ResultWrapper.fail(ResultEnumCode.SESSION_SAME_LOGIN);
+        // 设置TraceId
+        if(StringUtils.isEmpty(result.getTraceId())){
+            result.setTraceId(MDC.get("X-TraceId"));
+        }
         event.getResponse().setContentType("text/json;charset=utf-8");
         event.getResponse().getWriter().write(JSON.toJSONString(result));
+
     }
 }

@@ -1,5 +1,6 @@
 package com.wheel.admin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wheel.admin.annotation.SystemLogController;
@@ -7,6 +8,7 @@ import com.wheel.admin.controller.form.UserAddForm;
 import com.wheel.admin.controller.form.UserUpdateForm;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.enums.ResultEnumCode;
+import com.wheel.admin.exception.UserException;
 import com.wheel.admin.jwt.utils.JwtUtils;
 import com.wheel.admin.model.SysPermission;
 import com.wheel.admin.model.SysUser;
@@ -19,12 +21,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author jack_yun
@@ -42,9 +48,6 @@ public class SysUserController {
 
     @Autowired
     private CreateUserService createUserService;
-
-    @Resource
-    private SysPermissionService permissionService;
 
     /**
      *
@@ -100,11 +103,9 @@ public class SysUserController {
     @PostMapping("/deleteUser")
     @SystemLogController(description = "删除用户")
     public ResultDto deletUser(@RequestParam("userId") String userId){
-        Integer integer = sysUserService.deleteUserById(userId);
-        if(integer == 1){
-            return new ResultWrapper<>().success(ResultEnumCode.SUCCESS);
-        }
-        return new ResultWrapper<>().fail(ResultEnumCode.COMMON_FAIL);
+        sysUserService.deleteUserById(userId);
+        return new ResultWrapper<>().success(ResultEnumCode.SUCCESS);
+
     }
 
     /**
@@ -127,10 +128,13 @@ public class SysUserController {
         sysUser.setUpdateUser(Integer.valueOf(userId));
         sysUser.setPassword(new BCryptPasswordEncoder().encode(sysUser.getPassword()));
         boolean b = sysUserService.updateById(sysUser);
-        if(b){
-            return new ResultWrapper<>().success(ResultEnumCode.SUCCESS);
+        if(!b){
+            throw new UserException(ResultEnumCode.EDIT_USER_FAIL.getCode()
+                                    ,ResultEnumCode.EDIT_USER_FAIL.getMessage());
         }
-        return new ResultWrapper<>().fail(ResultEnumCode.COMMON_FAIL);
+        return new ResultWrapper<>().success(ResultEnumCode.SUCCESS);
+
+
     }
 
     @ApiOperation(value = "获取当前用户的信息")

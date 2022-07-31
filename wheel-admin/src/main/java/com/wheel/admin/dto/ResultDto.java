@@ -15,9 +15,11 @@ import java.io.Serializable;
 @Data
 public class ResultDto<T> implements Serializable {
     private Boolean success;
-    private Integer errorCode;
+    private String errorCode;
     private String errorMsg;
     private T data;
+    protected String traceId;
+    protected String url;
 
     public ResultDto() {
     }
@@ -53,6 +55,11 @@ public class ResultDto<T> implements Serializable {
         this.errorCode = success ? (resultEnum==null ? ResultEnumCode.SUCCESS.getCode() : resultEnum.getCode()): (resultEnum == null ? ResultEnumCode.COMMON_FAIL.getCode() : resultEnum.getCode());
         this.errorMsg = success ? (resultEnum==null ? ResultEnumCode.SUCCESS.getMessage() : resultEnum.getMessage()) : (resultEnum == null ? ResultEnumCode.COMMON_FAIL.getMessage() : resultEnum.getMessage());
         this.data = data;
+    }
+    public ResultDto(boolean success,String errorCode,String errorMsg){
+        this.success = success;
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
     }
 
 }
