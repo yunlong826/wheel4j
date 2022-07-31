@@ -29,8 +29,8 @@ public class ZkController {
     /**
      *
      *
-     *    providerPath:"/wheel/"+interfaceConfigs.get(i).getGroup()+"/"+clazzNames.get(i)+"/providers"+"/"+ NetUtils.getServerIp() + ":"
-     *                     +nettyPort+"@"+serviceBeans.get(i).getLoadbalance()+"_"+serviceBeans.get(i).getWeight()
+     *    providerPath:"/wheel/"+group+"&"+clazzNames.get(i)+"&"+version+"&"+"providers"+"/"+ NetUtils.getServerIp() + ":"
+     *                     +nettyPort+"@"+serviceBeans.get(i).getLoadbalance()+"_"+serviceBeans.get(i).getWeight()“
      *
      * @return com.wheel.admin.dto.ResultDto<java.util.List<com.wheel.admin.dto.ZKDto>>
      * @author long_yun
