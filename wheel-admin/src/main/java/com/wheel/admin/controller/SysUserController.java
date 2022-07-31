@@ -8,8 +8,10 @@ import com.wheel.admin.controller.form.UserUpdateForm;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.enums.ResultEnumCode;
 import com.wheel.admin.jwt.utils.JwtUtils;
+import com.wheel.admin.model.SysPermission;
 import com.wheel.admin.model.SysUser;
 import com.wheel.admin.service.CreateUserService;
+import com.wheel.admin.service.SysPermissionService;
 import com.wheel.admin.service.SysUserService;
 import com.wheel.admin.wrapper.ResultWrapper;
 import io.swagger.annotations.Api;
@@ -17,15 +19,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.time.LocalDateTime;
 
 /**
@@ -44,6 +42,9 @@ public class SysUserController {
 
     @Autowired
     private CreateUserService createUserService;
+
+    @Resource
+    private SysPermissionService permissionService;
 
     /**
      *
@@ -130,6 +131,17 @@ public class SysUserController {
             return new ResultWrapper<>().success(ResultEnumCode.SUCCESS);
         }
         return new ResultWrapper<>().fail(ResultEnumCode.COMMON_FAIL);
+    }
+
+    @ApiOperation(value = "获取当前用户的信息")
+    @GetMapping("/userInfo")
+    @SystemLogController(description = "当前登录用户获取登录信息")
+    public ResultDto getInfo(@ApiParam(hidden = true) HttpServletRequest httpServletRequest) {
+        String userId = JwtUtils.getMemberIdByJwtToken(httpServletRequest);
+        SysUser sysUser = sysUserService.getById(Integer.valueOf(userId));
+        sysUser.setPassword("");
+
+        return ResultWrapper.success(sysUser);
     }
 
 }
