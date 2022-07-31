@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <!-- scope=context：该属性在本配置内使用有效，source为在application.properties中定义的信息，defaultValue为默认值 -->
+    <springProperty name="logPath" source="log.path"
+                    defaultValue="logs" />
+    <springProperty name="logName"
+                    source="spring.application.name" defaultValue="wheel-log" />
+    <springProperty name="serviceVersion" source="application.version" defaultValue="default" />
+
+    <!-- 日志输出格式 -->
+    <!--yyyy-MM-dd'T'HH:mm:ss.SSSXXX : 时间 %-5p: 日志级别 logName : 应用名称 %X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-B3-ParentSpanId:-},%X{X-Span-Export:-}：链路信息
+        %X{X-TraceId:-}：链路信息 %t：线程名称，如http-nio-8031-exec-3 %logger-%line：Class名称及指定行 -->
+    <property name="logPattern"
+              value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [%-5p][${logName:-}][${PID:- }][%X{X-TraceId:-}][%t][%X{domain:-}] --- %logger-%line : %msg %n" />
+    <!-- 控制台输出 -->
+    <appender name="stdout"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${logPattern}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+</included>

@@ -35,5 +35,11 @@ public class ResultWrapper<T> {
         return new ResultDto(false, resultEnum);
     }
 
+    public static ResultDto fail(String errCode,String errMsg){
+        return new ResultDto(false,errCode,errMsg);
+    }
+
+
+
 
 }
