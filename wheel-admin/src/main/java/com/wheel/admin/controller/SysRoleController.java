@@ -1,6 +1,7 @@
 package com.wheel.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wheel.admin.annotation.SystemLogController;
 import com.wheel.admin.dto.ResultDto;
@@ -76,7 +77,23 @@ public class SysRoleController {
                                     ,ResultEnumCode.BIND_USER_ROLE_FAIL.getMessage());
         }
         return ResultWrapper.success();
-
-
     }
+    @ApiOperation(value = "解绑角色")
+    @PostMapping("/unBindRoles")
+    @SystemLogController(description = "解绑角色")
+    public ResultDto<String> unBindRoles(@RequestParam("roleName") String roleName,@RequestParam("account") String account){
+        SysRole sysRole = sysRoleMapper.selectOne(new LambdaQueryWrapper<SysRole>().eq(SysRole::getRoleName, roleName));
+        SysUser byId = sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));
+        sysRoleUserService.remove(new LambdaQueryWrapper<SysUserRoleRelation>()
+                .eq(SysUserRoleRelation::getUserId, byId.getId())
+                .eq(SysUserRoleRelation::getRoleId, sysRole.getId()));
+        return ResultWrapper.success();
+    }
+
+    @ApiOperation("展示所有角色")
+    @GetMapping("/list")
+    public ResultDto listAll () {
+        return ResultWrapper.success(sysRoleMapper.selectList(new LambdaQueryWrapper<>()));
+    }
+
 }

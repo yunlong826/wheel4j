@@ -15,10 +15,12 @@ import com.wheel.admin.model.SysUser;
 import com.wheel.admin.service.CreateUserService;
 import com.wheel.admin.service.SysPermissionService;
 import com.wheel.admin.service.SysUserService;
+import com.wheel.admin.utils.StringUtils;
 import com.wheel.admin.wrapper.ResultWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -130,7 +132,10 @@ public class SysUserController {
         sysUser.setUpdateTime(LocalDateTime.now());
         String userId = JwtUtils.getMemberIdByJwtToken(request);
         sysUser.setUpdateUser(Integer.valueOf(userId));
-        sysUser.setPassword(new BCryptPasswordEncoder().encode(sysUser.getPassword()));
+        sysUser.setCreateUser(Integer.valueOf(userId));
+        if (Strings.isNotBlank(sysUser.getPassword())) {
+            sysUser.setPassword(new BCryptPasswordEncoder().encode(sysUser.getPassword()));
+        }
         boolean b = sysUserService.updateById(sysUser);
         if(!b){
             throw new UserException(ResultEnumCode.EDIT_USER_FAIL.getCode()

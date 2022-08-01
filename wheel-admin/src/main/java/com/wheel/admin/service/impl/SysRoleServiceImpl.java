@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -45,11 +46,15 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper,SysRole> imple
         for(SysUserRoleRelation sysUserRoleRelation:sysUserRoleRelations){
             ids.add(sysUserRoleRelation.getRoleId());
         }
-        List<SysRole> sysRoles = sysRoleMapper.selectBatchIds(ids);
+        List<SysRole> sysRoles = new LinkedList<>();
+        if (ids.size() > 0) {
+            sysRoles = sysRoleMapper.selectBatchIds(ids);
+        }
+
         SysUser byId = sysUserService.getById(Integer.valueOf(userId));
         List<SysUserRoleDto> sysUserRoleDtos = new ArrayList<>();
         for(int i = 0;i < sysRoles.size();i++){
-            sysUserRoleDtos.add(new SysUserRoleDto(sysRoles.get(i).getRoleName(),byId.getAccount()));
+            sysUserRoleDtos.add(new SysUserRoleDto(byId.getAccount(), sysRoles.get(i).getRoleName()));
         }
         return new ResultWrapper<>().success(sysUserRoleDtos);
     }
