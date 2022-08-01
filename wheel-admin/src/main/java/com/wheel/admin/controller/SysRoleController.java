@@ -1,11 +1,13 @@
 package com.wheel.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wheel.admin.annotation.SystemLogController;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.dto.SysUserRoleDto;
 import com.wheel.admin.enums.ResultEnumCode;
+import com.wheel.admin.exception.UserException;
 import com.wheel.admin.mapper.SysRoleMapper;
 import com.wheel.admin.mapper.SysRoleUserMapper;
 import com.wheel.admin.model.SysRole;
@@ -60,20 +62,38 @@ public class SysRoleController {
     @SystemLogController(description = "绑定角色")
     public ResultDto<String> bindRoles(@RequestParam("roleName") String roleName,@RequestParam("account") String account){
         SysRole sysRole = sysRoleMapper.selectOne(new LambdaQueryWrapper<SysRole>().eq(SysRole::getRoleName, roleName));
-        SysUser byId = sysUserService.getById(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));
+        SysUser byId = sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));
         if(sysRole == null){
-            return ResultWrapper.fail(ResultEnumCode.PARAM_NOT_VALID);
+            throw new UserException(ResultEnumCode.USER_ROLE_GET_FAIL.getCode()
+                                    ,ResultEnumCode.USER_ROLE_GET_FAIL.getMessage());
         }
         SysUserRoleRelation sysUserRoleRelation = new SysUserRoleRelation();
 
         sysUserRoleRelation.setRoleId(sysRole.getId());
         sysUserRoleRelation.setUserId(byId.getId());
         boolean b = sysRoleUserService.saveOrUpdate(sysUserRoleRelation);
-        if(b){
-            return ResultWrapper.success();
-        }else{
-            return ResultWrapper.fail(ResultEnumCode.PARAM_NOT_VALID);
+        if(!b){
+            throw new UserException(ResultEnumCode.BIND_USER_ROLE_FAIL.getCode()
+                                    ,ResultEnumCode.BIND_USER_ROLE_FAIL.getMessage());
         }
-
+        return ResultWrapper.success();
     }
+    @ApiOperation(value = "解绑角色")
+    @PostMapping("/unBindRoles")
+    @SystemLogController(description = "解绑角色")
+    public ResultDto<String> unBindRoles(@RequestParam("roleName") String roleName,@RequestParam("account") String account){
+        SysRole sysRole = sysRoleMapper.selectOne(new LambdaQueryWrapper<SysRole>().eq(SysRole::getRoleName, roleName));
+        SysUser byId = sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));
+        sysRoleUserService.remove(new LambdaQueryWrapper<SysUserRoleRelation>()
+                .eq(SysUserRoleRelation::getUserId, byId.getId())
+                .eq(SysUserRoleRelation::getRoleId, sysRole.getId()));
+        return ResultWrapper.success();
+    }
+
+    @ApiOperation("展示所有角色")
+    @GetMapping("/list")
+    public ResultDto listAll () {
+        return ResultWrapper.success(sysRoleMapper.selectList(new LambdaQueryWrapper<>()));
+    }
+
 }

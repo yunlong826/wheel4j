@@ -3,10 +3,15 @@ package com.wheel.admin.security.auth;
 import com.alibaba.fastjson.JSON;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.enums.ResultEnumCode;
+import com.wheel.admin.exception.UserException;
 import com.wheel.admin.wrapper.ResultWrapper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +25,11 @@ import java.io.IOException;
  * @version 1.0
  * @date 2022/7/29 20:21
  */
+@Component
 public class WheelAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        //返回json数据
+//        返回json数据
         ResultDto result = null;
         if (e instanceof AccountExpiredException) {
             //账号过期
@@ -46,6 +52,10 @@ public class WheelAuthenticationFailureHandler implements AuthenticationFailureH
         }else{
             //其他错误
             result = ResultWrapper.fail(ResultEnumCode.COMMON_FAIL);
+        }
+        // 设置TraceId
+        if(StringUtils.isEmpty(result.getTraceId())){
+            result.setTraceId(MDC.get("X-TraceId"));
         }
         //处理编码方式，防止中文乱码的情况
         response.setContentType("text/json;charset=utf-8");

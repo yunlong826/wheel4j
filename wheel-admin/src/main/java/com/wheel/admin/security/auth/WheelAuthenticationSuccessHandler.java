@@ -8,11 +8,14 @@ import com.wheel.admin.jwt.utils.JwtUtils;
 import com.wheel.admin.model.SysUser;
 import com.wheel.admin.service.SysUserService;
 import com.wheel.admin.wrapper.ResultWrapper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2022/7/29 20:38
  */
+@Component
 public class WheelAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
@@ -50,6 +54,10 @@ public class WheelAuthenticationSuccessHandler implements AuthenticationSuccessH
 
         //返回json数据
         ResultDto result = ResultWrapper.success(ResultEnumCode.SUCCESS_login,results);
+        // 设置TraceId
+        if(StringUtils.isEmpty(result.getTraceId())){
+            result.setTraceId(MDC.get("X-TraceId"));
+        }
         //处理编码方式，防止中文乱码的情况
         response.setContentType("text/json;charset=utf-8");
         // 把Json数据放入HttpServletResponse中返回给前台
