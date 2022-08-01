@@ -32,6 +32,9 @@
 - [x] 服务端优雅下线，在spring容器销毁前，先从zookeeper取消注册，最后关闭客户端连接。
 - [x] 支持注解方式配置
 - [x] 支持application.properties文件配置注册中心与protocol
+- [x] 实现wheel-admin模块，用户可以通过可视化界面进行服务查看
+- [x] wheel-admin模块使用Spring Security框架进行权限认证
+- [x] wheel-admin模块实现了日志追踪
 # 2. 待办
 - [ ]  支持多个序列化协议
 - [ ]  其他注册中心的支持 （redis）
@@ -69,7 +72,12 @@
 出现以下类似日志即为成功：
 
 ![img/img_6.png](img/img_6.png)
-# 5. 参考资料
+
+# 5. Wheel-admin模块
+wheel-admin模块与其他模块没有任何依赖关系，上述搭建成功后，可以启动wheel-admin模块，通过前端可视化界面展示相关服务信息。<br />
+前端项目详细地址: [https://github.com/TangBaoliang/wheel-admin-ui](https://github.com/TangBaoliang/wheel-admin-ui)
+
+# 6. 参考资料
 1. [https://github.com/apache/dubbo](https://github.com/apache/dubbo)
 
 2. [https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework)
