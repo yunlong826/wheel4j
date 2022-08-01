@@ -100,9 +100,13 @@ public class SysUserController {
      */
 
     @ApiOperation(value = "删除用户")
-    @PostMapping("/deleteUser")
+    @DeleteMapping("/deleteUser")
     @SystemLogController(description = "删除用户")
-    public ResultDto deletUser(@RequestParam("userId") String userId){
+    public ResultDto deletUser(@RequestParam("userId") String userId, HttpServletRequest httpServletRequest){
+        String thisUserId = JwtUtils.getMemberIdByJwtToken(httpServletRequest);
+        if (userId.equals(thisUserId)) {
+            throw new UserException(ResultEnumCode.USER_DELETE_FAIL.getCode(), "不能删除自己");
+        }
         sysUserService.deleteUserById(userId);
         return new ResultWrapper<>().success(ResultEnumCode.SUCCESS);
 
@@ -118,7 +122,7 @@ public class SysUserController {
      */
 
     @ApiOperation(value = "修改用户")
-    @PostMapping("/editUser")
+    @PutMapping("/editUser")
     @SystemLogController(description = "修改用户")
     public ResultDto editUser(@RequestBody UserUpdateForm userUpdateForm,@ApiParam(hidden = true) HttpServletRequest request){
         SysUser sysUser = new SysUser();

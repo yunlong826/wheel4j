@@ -1,5 +1,6 @@
 package com.wheel.admin.controller;
 
+import com.wheel.admin.controller.vo.MetaVo;
 import com.wheel.admin.controller.vo.RouterVo;
 import com.wheel.admin.dto.ResultDto;
 import com.wheel.admin.model.SysMenu;
@@ -38,6 +39,6 @@ public class SysMenuController {
     public ResultDto<List<RouterVo>> getRouters()
     {
         List<SysMenu> menus = menuService.selectMenuTree();
-        return ResultWrapper.success(menuService.buildMenus(menus));
+        return ResultWrapper.success(menuService.buildMenus(menuService.buildMenuTree(menus)));
     }
 }

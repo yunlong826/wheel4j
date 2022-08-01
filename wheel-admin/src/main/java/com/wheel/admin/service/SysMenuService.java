@@ -13,4 +13,5 @@ import java.util.List;
 public interface SysMenuService {
     public List<SysMenu> selectMenuTree();
     public List<RouterVo> buildMenus(List<SysMenu> menus);
+    public List<SysMenu> buildMenuTree(List<SysMenu> menus);
 }
