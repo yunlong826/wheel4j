@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO 随机算法负载均衡
+ * @description: 随机算法负载均衡
  * @date 2022/7/4 19:47
  *
  * 计算服务提供者的总权重，并维护一个前缀和数组。

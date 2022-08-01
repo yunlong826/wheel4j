@@ -1,7 +1,87 @@
-<a name="H9GBK"></a>
-# 1. 工程简介
-该项目模仿Dubbo，主要是基于Spring容器开发的一款简易版的Dubbo。使用者可以通过XML或者注解的方式进行配置相应信息。该项目使用Zookeeper作为注册中心，并且采用Netty框架进行RPC通信。该项目的主要模块如下：<br />![1656841256721.png](https://cdn.nlark.com/yuque/0/2022/png/26709179/1656841258875-e845bd1e-5419-4e36-98d1-ce2a9f23c9d2.png#clientId=ue41217d8-23ae-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=305&id=ud3c43a11&margin=%5Bobject%20Object%5D&name=1656841256721.png&originHeight=381&originWidth=379&originalType=binary&ratio=1&rotation=0&showTitle=false&size=13868&status=done&style=none&taskId=u6ea692ec-dc6c-4c8b-b55e-f6344fe7143&title=&width=303.2)
-<a name="M1MAD"></a>
-# 2. 搭建教程
-读者可以clone源码到本地（JDK1.8），然后本地启动zookeeper服务器（确保本地zk是可用的即可）<br />![1656841393357.png](https://cdn.nlark.com/yuque/0/2022/png/26709179/1656841395526-6e721592-7f3a-4115-8062-6ee5a0d94c6c.png#clientId=ue41217d8-23ae-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=25&id=ucaed16a0&margin=%5Bobject%20Object%5D&name=1656841393357.png&originHeight=31&originWidth=389&originalType=binary&ratio=1&rotation=0&showTitle=false&size=1115&status=done&style=none&taskId=uf0e5a70d-69d2-4167-888c-ae43d090191&title=&width=311.2)<br />![1656841367851.png](https://cdn.nlark.com/yuque/0/2022/png/26709179/1656841380396-e4aa3a11-fc3f-4ce3-a0e7-ce60ec538058.png#clientId=ue41217d8-23ae-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=487&id=u00000f23&margin=%5Bobject%20Object%5D&name=1656841367851.png&originHeight=609&originWidth=1213&originalType=binary&ratio=1&rotation=0&showTitle=false&size=64935&status=done&style=none&taskId=u25046d4e-d39b-4d28-bae4-6608258a7eb&title=&width=970.4)<br />打开wheel-demo模块：<br />![image.png](https://cdn.nlark.com/yuque/0/2022/png/26709179/1656841462919-0af845eb-8ccb-4763-b2fd-d2ca2aa41422.png#clientId=ue41217d8-23ae-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=301&id=u6f769acb&margin=%5Bobject%20Object%5D&name=image.png&originHeight=376&originWidth=350&originalType=binary&ratio=1&rotation=0&showTitle=false&size=23069&status=done&style=none&taskId=u04a50050-7dbb-43d9-b152-ed529cdfc24&title=&width=280)<br />启动生成者服务器：<br />![1656841511332.png](https://cdn.nlark.com/yuque/0/2022/png/26709179/1656841529572-f0c3ab77-3ec2-43b4-a15b-7c0e858678ed.png#clientId=ue41217d8-23ae-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=171&id=uc06a3440&margin=%5Bobject%20Object%5D&name=1656841511332.png&originHeight=214&originWidth=440&originalType=binary&ratio=1&rotation=0&showTitle=false&size=8469&status=done&style=none&taskId=u8da40a09-dcf0-4f3f-a0a9-697f26c693e&title=&width=352)<br />启动后，出现下列类似日志即为成功：<br />![1656841571211.png](https://cdn.nlark.com/yuque/0/2022/png/26709179/1656841589156-62d67244-1838-4fc2-ab19-64ef09d2c5c1.png#clientId=ue41217d8-23ae-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=168&id=ueb6e3fe9&margin=%5Bobject%20Object%5D&name=1656841571211.png&originHeight=210&originWidth=1491&originalType=binary&ratio=1&rotation=0&showTitle=false&size=63128&status=done&style=none&taskId=ud94093a2-6cec-42d6-a574-4b6544308ad&title=&width=1192.8)<br />启动消费者服务器:<br />![1656841629800.png](https://cdn.nlark.com/yuque/0/2022/png/26709179/1656841632025-78927400-cf96-4990-8b6f-b49c30a2cf30.png#clientId=ue41217d8-23ae-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=143&id=u9e576356&margin=%5Bobject%20Object%5D&name=1656841629800.png&originHeight=179&originWidth=441&originalType=binary&ratio=1&rotation=0&showTitle=false&size=7348&status=done&style=none&taskId=uf0c53b79-9615-4e83-8bdf-961fa67257a&title=&width=352.8)<br />出现以下类似日志即为成功：<br />![1656841745119.png](https://cdn.nlark.com/yuque/0/2022/png/26709179/1656841763495-a80e4e7e-b15c-4115-b2d5-165ec2a4f8fa.png#clientId=ue41217d8-23ae-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=76&id=uced7d2c6&margin=%5Bobject%20Object%5D&name=1656841745119.png&originHeight=95&originWidth=347&originalType=binary&ratio=1&rotation=0&showTitle=false&size=9368&status=done&style=none&taskId=ue94ec935-7edb-4a78-aa45-9835e78f0ca&title=&width=277.6)
+![img/project.png](img/project.png)
+## Star History
 
+[![Star History Chart](https://api.star-history.com/svg?repos=yunlong826/wheel4j&type=Date)](https://star-history.com/#yunlong826/wheel4j&Date)
+
+[![GitHub Author](https://img.shields.io/badge/Author-longyun-red)](https://github.com/yunlong826)
+[![GitHub Author](https://img.shields.io/badge/Author-TangBaoliang-red)](https://github.com/TangBaoliang)
+[![GitHub CSDN](https://img.shields.io/badge/CSDN-longyun-red)](https://blog.csdn.net/weixin_45637300)
+[![GitHub yuque](https://img.shields.io/badge/yuque-longyun-green)](https://www.yuque.com/longyun-eqokj)
+[![GitHub issues](https://img.shields.io/github/issues/yunlong826/wheel4j)](https://github.com/yunlong826/wheel4j/issues)
+[![GitHub forks](https://img.shields.io/github/forks/yunlong826/wheel4j)](https://github.com/yunlong826/wheel4j/network)
+[![GitHub stars](https://img.shields.io/github/stars/yunlong826/wheel4j)](https://github.com/yunlong826/wheel4j/stargazers)
+# 前言：
+如果你还在为课设因为没有项目或者校招没有项目而烦恼，或许你还在嫌弃一些烂大街的项目时，我想说该项目可能会适合你。如果你想了解该项目，您可能需要一些前置知识，比如你了解什么是微服务，你或许使用过Dubbo或者了解SpringCloud，又或许你还了解Rpc远程过程调用，又或许你稍微看了一下Spring与Dubbo的通用源码，那么我相信该项目非常的适合你，而且，我也需要你与我的参与一起完善该项目。我相信你的逻辑能力应该能让这个项目发散更多的闪光点。
+
+尽管现在Rpc项目也是越来越多了，但是就目前免费公布的一些源码，它们的实现仅仅是一个Rpc调用，这样的代码量是非常少的，而且项目也算是一个微型项目，然而该项目的功能还是相对比较完善的，当然，我需要你的参与让这个项目更加完善。同时，我也需要你的star，让这个项目被更多人知道。如果你非常感兴趣的话，请访问链接[https://github.com/yunlong826/wheel4j](https://github.com/yunlong826/wheel4j) star一下，并联系我(qq:1653812264,备注来源)，那么我们就可以一起参与该项目了。
+## 前置知识
+1. 熟练搭建分布式项目
+2. 了解分布式相关原理
+3. 粗读过Spring源码/Dubbo源码
+4. 了解Zookeeper/Netty的使用
+5. Rpc相关原理
+# 1. 已完成功能列表
+- [x] 支持服务端多个Api暴露
+- [x] 支持消费端对暴露的Api进行调用
+- [x] 基于netty+json序列化通信
+- [x] zk、netty连接复用
+- [x] netty心跳保活机制
+- [x] 支持消费端调用服务的负载均衡
+- [x] 支持多个负载均衡策略（哈希一致性、最少活跃次数、加权随机、加权轮询）
+- [x] 支持api的多个版本暴露
+- [x] 服务端请求线程池实现
+- [x] 服务端优雅启动，在spring容器将所有要加装的bean加载到容器后，再注册到zookeeper上
+- [x] 服务端优雅下线，在spring容器销毁前，先从zookeeper取消注册，最后关闭客户端连接。
+- [x] 支持注解方式配置
+- [x] 支持application.properties文件配置注册中心与protocol
+- [x] 实现wheel-admin模块，用户可以通过可视化界面进行服务查看
+- [x] wheel-admin模块使用Spring Security框架进行权限认证
+- [x] wheel-admin模块实现了日志追踪
+# 2. 待办
+- [ ]  支持多个序列化协议
+- [ ]  其他注册中心的支持 （redis）
+- [ ]  项目性能优化与代码结构优化
+  .......
+# 3. 工程简介
+## 3.1 构建
+   ![img/xiangmu.png](img/xiangmu.png)
+
+   该项目模仿Dubbo，主要是基于Spring容器开发的一款简易版的Dubbo。使用者可以通过XML或者注解的方式进行配置相应信息。该项目使用Zookeeper作为注册中心，并且采用Netty框架进行RPC通信。该项目的主要模块如下：
+
+   ![img/img.png](img/img.png)
+# 4. 搭建教程
+   读者可以clone源码到本地（JDK1.8），然后本地启动zookeeper服务器（确保本地zk是可用的即可）
+
+   ![img/img_1.png](img/img_1.png)
+
+
+打开wheel-demo模块：
+
+![img/img_2.png](img/img_2.png)
+
+启动生成者服务器：
+
+![img/img_3.png](img/img_3.png)
+
+启动后，出现下列类似日志即为成功：
+
+![img/img_4.png](img/img_4.png)
+
+启动消费者服务器:
+
+![img/img_5.png](img/img_5.png)
+
+出现以下类似日志即为成功：
+
+![img/img_6.png](img/img_6.png)
+
+# 5. Wheel-admin模块
+wheel-admin模块与其他模块没有任何依赖关系，上述搭建成功后，可以启动wheel-admin模块，通过前端可视化界面展示相关服务信息。<br />
+前端项目详细地址: [https://github.com/TangBaoliang/wheel-admin-ui](https://github.com/TangBaoliang/wheel-admin-ui)
+
+# 6. 参考资料
+1. [https://github.com/apache/dubbo](https://github.com/apache/dubbo)
+
+2. [https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework)
+
+3. [https://github.com/jessin20161124/miniDubboOpen](https://github.com/jessin20161124/miniDubboOpen)

@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO 最少活跃负载均衡
+ * @description: 最少活跃负载均衡
  * @date 2022/7/4 19:03
  */
 public class LeastActiveLoadBalance extends AbstractLoadBalance{

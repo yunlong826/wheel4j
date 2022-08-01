@@ -5,6 +5,7 @@ package com.wheel.yun.common.exporter;
 import com.wheel.yun.common.config.InterfaceConfig;
 import com.wheel.yun.common.invoker.RpcInvocation;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,10 +19,10 @@ public class WheelExporter {
     private static Map<String, Object> exportServiceMap = new ConcurrentHashMap();
 
 
-    public static void exportService(String[] clazzName,InterfaceConfig[] interfaceConfigs,Object[] refs){
+    public static void exportService(List<String> clazzName, List<InterfaceConfig> interfaceConfigs, List<Object> refs){
         // 三个数组的长度都是一样的
-        for(int i = 0;i<clazzName.length;i++){
-            exportService(clazzName[i],interfaceConfigs[i],refs[i]);
+        for(int i = 0;i<clazzName.size();i++){
+            exportService(clazzName.get(i),interfaceConfigs.get(i),refs.get(i));
         }
     }
     private static void exportService(String clazzName, InterfaceConfig interfaceConfig, Object ref) {
@@ -29,9 +30,9 @@ public class WheelExporter {
         exportServiceMap.put(key, ref);
     }
 
-    public static void remove(String[] clazzName,InterfaceConfig[] interfaceConfigs){
-        for(int i = 0;i<clazzName.length;i++){
-            remove(clazzName[i],interfaceConfigs[i]);
+    public static void remove(List<String> clazzName,List<InterfaceConfig> interfaceConfigs){
+        for(int i = 0;i<clazzName.size();i++){
+            remove(clazzName.get(i),interfaceConfigs.get(i));
         }
     }
     private static void remove(String clazzName, InterfaceConfig interfaceConfig) {

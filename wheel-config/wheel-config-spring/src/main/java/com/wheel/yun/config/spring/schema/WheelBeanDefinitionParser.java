@@ -55,6 +55,8 @@ public class WheelBeanDefinitionParser implements BeanDefinitionParser {
 
             parserContext.getRegistry().registerBeanDefinition(element.getAttribute("protocol"),genericBeanDefinition);
         }else if(beanClass.equals(ServiceBean.class)){
+            if(element.getAttribute("interface") == null || element.getAttribute("interface").length() == 0)
+                return genericBeanDefinition;
             genericBeanDefinition.getPropertyValues().add("interface",element.getAttribute("interface"));
             genericBeanDefinition.getPropertyValues().add("version",element.getAttribute("version"));
             genericBeanDefinition.getPropertyValues().add("ref",element.getAttribute("ref"));
@@ -68,6 +70,11 @@ public class WheelBeanDefinitionParser implements BeanDefinitionParser {
             parserContext.getRegistry().registerBeanDefinition(element.getAttribute("interface"),genericBeanDefinition);
         }else if(beanClass.equals(ReferenceBean.class)){
             System.out.println(element.getAttribute("id"));
+
+            String id = element.getAttribute("id")+element.getAttribute("interface")+element.getAttribute("version")+
+                    element.getAttribute("group");
+            if(id == null || id.length() == 0)
+                return genericBeanDefinition;
             genericBeanDefinition.getPropertyValues().add("id",element.getAttribute("id"));
             genericBeanDefinition.getPropertyValues().add("interface",element.getAttribute("interface"));
             genericBeanDefinition.getPropertyValues().add("version",element.getAttribute("version"));
@@ -76,8 +83,7 @@ public class WheelBeanDefinitionParser implements BeanDefinitionParser {
             genericBeanDefinition.getPropertyValues().add("failStrategy",element.getAttribute("failStrategy"));
             genericBeanDefinition.getPropertyValues().add("retryCount",element.getAttribute("retryCount"));
 
-            String id = element.getAttribute("id")+element.getAttribute("interface")+element.getAttribute("version")+
-                    element.getAttribute("group");
+
             WheelBeanDefinitionCache.putCache(ReferenceBean.class,id);
             parserContext.getRegistry().registerBeanDefinition(id,genericBeanDefinition);
         }else{

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wheel.admin.mapper.SysPermissionMapper">
+
+    <select id="getUserRolesByUserId" resultType="com.wheel.admin.model.SysPermission">
+        SELECT
+        p.*
+        FROM
+        sys_user AS u
+        LEFT JOIN sys_user_role_relation AS ur
+        ON u.id = ur.user_id
+        LEFT JOIN sys_role AS r
+        ON r.id = ur.role_id
+        LEFT JOIN sys_role_permission_relation AS rp
+        ON r.id = rp.role_id
+        LEFT JOIN sys_permission AS p
+        ON p.id = rp.permission_id
+        WHERE u.id = #{userId}
+    </select>
+
+    <select id="selectListByPath" resultType="com.wheel.admin.model.SysPermission">
+        select p.*
+        from sys_permission as p
+        left join sys_request_path_permission_relation as srp
+        on p.id = srp.permission_id
+        left join sys_request_path as sr
+        on srp.url_id = sr.id
+        where sr.url = #{requestUrl}
+    </select>
+
+</mapper>

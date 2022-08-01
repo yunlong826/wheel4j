@@ -8,7 +8,7 @@ import com.wheel.yun.cluster.loadbalance.RandomLoadBalance;
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO
+ * @description: TODO 后续应该优化代码结构，该工厂模式过于简陋
  * @date 2022/7/4 21:52
  */
 public class LoadBalanceFactory {

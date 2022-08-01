@@ -3,12 +3,14 @@ package com.wheel.yun.config.spring;
 import com.google.common.collect.Maps;
 import com.wheel.yun.common.config.InterfaceConfig;
 import com.wheel.yun.config.common.ReferenceConfig;
+import com.wheel.yun.config.common.ReferenceProxy;
 import com.wheel.yun.config.common.RegistryConfig;
 import com.wheel.yun.config.common.cache.WheelBeanDefinitionCache;
 import com.wheel.yun.config.spring.annonation.Reference;
 import com.wheel.yun.config.spring.util.WheelBeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -16,16 +18,18 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO
+ * @description:
  * @date 2022/5/30 16:13
  */
 @Slf4j
@@ -44,9 +48,26 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements BeanFactoryP
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        this.registryConfig = WheelBeanUtils.getRegistryConfig(beanFactory,RegistryConfig.class)[0];
+        List<RegistryConfig> registryConfigs = WheelBeanUtils.getRegistryConfig(beanFactory,RegistryConfig.class);
+        if(registryConfigs == null || registryConfigs.size() == 0){
+            registryConfigs = new ArrayList<>();
+            String[] beanNamesForType = beanFactory.getBeanNamesForType(RegistryConfig.class);
+            for(String beanName:beanNamesForType){
+                registryConfigs.add((RegistryConfig) beanFactory.getBean(beanName));
+            }
+        }
+        this.registryConfig = registryConfigs.get(0);
 
         List<String> list = WheelBeanDefinitionCache.getList(ReferenceBean.class);
+        if(list == null || list.size() == 0){
+            list = new ArrayList<>();
+            String[] beanNamesForType = beanFactory.getBeanNamesForType(ReferenceBean.class);
+            for(String beanName:beanNamesForType){
+                list.add(beanName);
+            }
+        }
+        if(list == null || list.size() == 0)
+            return;
         for(int i = 0;i<list.size();i++){
             ReferenceBean bean = (ReferenceBean) beanFactory.getBean(list.get(i));
             InterfaceConfig interfaceConfig = transform(bean);
@@ -75,35 +96,6 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements BeanFactoryP
 
 
         }
-//        for(String beanDefinitionName:beanFactory.getBeanDefinitionNames()){
-//            BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanDefinitionName);
-//            String beanClassName = beanDefinition.getBeanClassName();
-//            if(beanClassName != null){
-//                Class<?> clazz = ClassUtils.resolveClassName(beanClassName, this.getClass().getClassLoader());
-//                Object bean = applicationContext.getBean(clazz);
-//                Field[] declaredFields = clazz.getDeclaredFields();
-//                for(Field field:declaredFields){
-//                    boolean isExist = field.isAnnotationPresent(Reference.class);
-//                    if(isExist){
-//                        try{
-//                            if (!field.getType().isInterface()) {
-//                                throw new RuntimeException("wheel依赖不是接口：" + field.getType().getName());
-//                            }
-//                            Reference ref = field.getAnnotation(Reference.class);
-//                            log.info("尝试注入接口代理，bean:{} 属性为：{}", clazz.getName(), field.getName());
-//                            field.setAccessible(true);
-//                            InterfaceConfig interfaceConfig = transform(ref);
-//                            log.info("registryConfig的地址:{}",registryConfig.getHost());
-//                            ReferenceProxy referenceProxy = new ReferenceProxy(field.getType(),interfaceConfig,registryConfig);
-//                            log.info("代理对象：{}",referenceProxy.getProxy());
-//                            field.set(bean,referenceProxy.getProxy());
-//                        }catch (IllegalAccessException e){
-//                            log.error("设置jdk实例出错啦：{}", field);
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 
     @Override
@@ -111,7 +103,7 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements BeanFactoryP
         this.applicationContext = applicationContext;
         this.beanDefinitionRegistry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
     }
-    private InterfaceConfig transform(Reference ref) {
+    private InterfaceConfig transformAnno(Reference ref) {
         InterfaceConfig interfaceConfig = new InterfaceConfig();
         interfaceConfig.setGroup(ref.group());
         interfaceConfig.setVersion(ref.version());
@@ -122,8 +114,14 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements BeanFactoryP
     }
     private InterfaceConfig transform(ReferenceBean ref) {
         InterfaceConfig interfaceConfig = new InterfaceConfig();
-        interfaceConfig.setGroup(ref.getGroup());
-        interfaceConfig.setVersion(ref.getVersion());
+        String group = ref.getGroup();
+        if(group == null || group.length() == 0)
+            group = "DEFAULT_GROUP";
+        interfaceConfig.setGroup(group);
+        String version =  ref.getVersion();
+        if(version == null || version.length() == 0)
+            version = "1.0.0";
+        interfaceConfig.setVersion(version);
         interfaceConfig.setTimeout(ref.getTimeout());
         interfaceConfig.setFailStrategy(ref.getFailStrategy());
         interfaceConfig.setRetryCount(ref.getRetryCount());
