@@ -2,7 +2,9 @@
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=yunlong826/wheel4j&type=Date)](https://star-history.com/#yunlong826/wheel4j&Date)
+
 [![GitHub Author](https://img.shields.io/badge/Author-longyun-red)](https://github.com/yunlong826)
+[![GitHub Author](https://img.shields.io/badge/Author-TangBaoliang-red)](https://github.com/TangBaoliang)
 [![GitHub CSDN](https://img.shields.io/badge/CSDN-longyun-red)](https://blog.csdn.net/weixin_45637300)
 [![GitHub yuque](https://img.shields.io/badge/yuque-longyun-green)](https://www.yuque.com/longyun-eqokj)
 [![GitHub issues](https://img.shields.io/github/issues/yunlong826/wheel4j)](https://github.com/yunlong826/wheel4j/issues)
