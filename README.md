@@ -77,7 +77,9 @@
 
 # 5. Wheel-admin模块
 wheel-admin模块与其他模块没有任何依赖关系，上述搭建成功后，可以启动wheel-admin模块，通过前端可视化界面展示相关服务信息。<br />
-前端项目详细地址: [https://github.com/TangBaoliang/wheel-admin-ui](https://github.com/TangBaoliang/wheel-admin-ui)
+前端项目详细地址: [https://github.com/TangBaoliang/wheel-admin-ui](https://github.com/TangBaoliang/wheel-admin-ui) <br />
+上述都启动成功后，前端页面关于节点监控将会展示出来：
+![img/img_7.png](img/img_7.png)
 
 # 6. 参考资料
 1. [https://github.com/apache/dubbo](https://github.com/apache/dubbo)
