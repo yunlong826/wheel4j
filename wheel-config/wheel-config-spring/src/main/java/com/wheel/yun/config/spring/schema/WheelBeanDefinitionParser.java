@@ -1,25 +1,22 @@
 package com.wheel.yun.config.spring.schema;
 
-
-
-import com.wheel.yun.common.config.InterfaceConfig;
-import com.wheel.yun.config.common.ApplicationConfig;
-import com.wheel.yun.config.common.ProtocolConfig;
-import com.wheel.yun.config.common.RegistryConfig;
 import com.wheel.yun.config.common.cache.WheelBeanDefinitionCache;
-import com.wheel.yun.config.spring.ReferenceBean;
-import com.wheel.yun.config.spring.ServiceBean;
-import com.wheel.yun.config.spring.util.WheelBeanUtils;
+import com.wheel.yun.config.spring.context.ConfigsParamsContext;
+import com.wheel.yun.config.spring.processor.XMLConfigPostProcessor;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
 /**
  * @author jack_yun
  * @version 1.0
- * @description: TODO
+ * @description:
  * @date 2022/5/28 17:31
  */
 public class WheelBeanDefinitionParser implements BeanDefinitionParser {
@@ -35,60 +32,32 @@ public class WheelBeanDefinitionParser implements BeanDefinitionParser {
         GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
         genericBeanDefinition.setBeanClass(beanClass);
         genericBeanDefinition.setLazyInit(false);
-        if(beanClass.equals(ApplicationConfig.class)){
-            genericBeanDefinition.getPropertyValues().add("name",element.getAttribute("name"));
-            parserContext.getRegistry().registerBeanDefinition(ApplicationConfig.class.getName(),genericBeanDefinition);
-        }else if(beanClass.equals(RegistryConfig.class)){
-            genericBeanDefinition.getPropertyValues().add("id",element.getAttribute("id"));
-            genericBeanDefinition.getPropertyValues().add("address",element.getAttribute("address"));
-            if(WheelBeanUtils.ADDRESS.length() == 0){
-                WheelBeanUtils.ADDRESS = element.getAttribute("address");
-            }
-            WheelBeanDefinitionCache.putCache(RegistryConfig.class, element.getAttribute("id"));
 
-            parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"),genericBeanDefinition);
-        }else if(beanClass.equals(ProtocolConfig.class)){
-            genericBeanDefinition.getPropertyValues().add("protocol",element.getAttribute("protocol"));
-            genericBeanDefinition.getPropertyValues().add("port",element.getAttribute("port"));
+        this.parse(element,parserContext,genericBeanDefinition);
 
-            WheelBeanDefinitionCache.putCache(ProtocolConfig.class,element.getAttribute("protocol"));
-
-            parserContext.getRegistry().registerBeanDefinition(element.getAttribute("protocol"),genericBeanDefinition);
-        }else if(beanClass.equals(ServiceBean.class)){
-            if(element.getAttribute("interface") == null || element.getAttribute("interface").length() == 0)
-                return genericBeanDefinition;
-            genericBeanDefinition.getPropertyValues().add("interface",element.getAttribute("interface"));
-            genericBeanDefinition.getPropertyValues().add("version",element.getAttribute("version"));
-            genericBeanDefinition.getPropertyValues().add("ref",element.getAttribute("ref"));
-            genericBeanDefinition.getPropertyValues().add("group",element.getAttribute("group"));
-            genericBeanDefinition.getPropertyValues().add("timeout",element.getAttribute("timeout"));
-            genericBeanDefinition.getPropertyValues().add("failStrategy",element.getAttribute("failStrategy"));
-            genericBeanDefinition.getPropertyValues().add("retryCount",element.getAttribute("retryCount"));
-
-            WheelBeanDefinitionCache.putCache(ServiceBean.class,element.getAttribute("interface"));
-
-            parserContext.getRegistry().registerBeanDefinition(element.getAttribute("interface"),genericBeanDefinition);
-        }else if(beanClass.equals(ReferenceBean.class)){
-            System.out.println(element.getAttribute("id"));
-
-            String id = element.getAttribute("id")+element.getAttribute("interface")+element.getAttribute("version")+
-                    element.getAttribute("group");
-            if(id == null || id.length() == 0)
-                return genericBeanDefinition;
-            genericBeanDefinition.getPropertyValues().add("id",element.getAttribute("id"));
-            genericBeanDefinition.getPropertyValues().add("interface",element.getAttribute("interface"));
-            genericBeanDefinition.getPropertyValues().add("version",element.getAttribute("version"));
-            genericBeanDefinition.getPropertyValues().add("group",element.getAttribute("group"));
-            genericBeanDefinition.getPropertyValues().add("timeout",element.getAttribute("timeout"));
-            genericBeanDefinition.getPropertyValues().add("failStrategy",element.getAttribute("failStrategy"));
-            genericBeanDefinition.getPropertyValues().add("retryCount",element.getAttribute("retryCount"));
-
-
-            WheelBeanDefinitionCache.putCache(ReferenceBean.class,id);
-            parserContext.getRegistry().registerBeanDefinition(id,genericBeanDefinition);
-        }else{
-            throw new IllegalArgumentException("error<--------------->error");
-        }
         return genericBeanDefinition;
     }
+    private void parse(Element element,ParserContext parserContext
+            ,GenericBeanDefinition beanDefinition){
+        List<String> beanNames = ConfigsParamsContext.ClassMapBeanName.get(this.beanClass);
+        String beanName = "";
+        for(int i = 0;i<beanNames.size();i++){
+            beanName+=element.getAttribute(beanNames.get(i));
+        }
+        if(beanName.length() == 0)
+            return;
+        List<String> params = ConfigsParamsContext.PARAMS.get(this.beanClass);
+        for(String param:params){
+            String attribute = element.getAttribute(param);
+            if(attribute == null ||attribute.length() == 0)
+                continue;
+            beanDefinition.getPropertyValues().add(param,attribute);
+        }
+        // 放入wheel容器内部，后续找相应的容器，直接从该缓存找，即可
+        WheelBeanDefinitionCache.putCache(this.beanClass,beanName);
+        // 注册到容器中
+        parserContext.getRegistry().registerBeanDefinition(beanName,beanDefinition);
+    }
+
+
 }
