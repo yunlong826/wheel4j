@@ -5,6 +5,7 @@ import com.wheel.yun.common.exporter.WheelExporter;
 import com.wheel.yun.config.common.ProtocolConfig;
 import com.wheel.yun.config.common.ReferenceProxy;
 import com.wheel.yun.config.common.RegistryConfig;
+import com.wheel.yun.config.spring.ReferenceBean;
 import com.wheel.yun.config.spring.ServiceBean;
 import com.wheel.yun.config.spring.util.NetUtils;
 import com.wheel.yun.config.spring.util.PropertiesFileUtil;
@@ -148,8 +149,14 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor, Enviro
 
     private InterfaceConfig transformAnno(Reference ref) {
         InterfaceConfig interfaceConfig = new InterfaceConfig();
-        interfaceConfig.setGroup(ref.group());
-        interfaceConfig.setVersion(ref.version());
+        String group = ref.group();
+        if(group == null || group.length() == 0)
+            group = "DEFAULT_GROUP";
+        interfaceConfig.setGroup(group);
+        String version =  ref.version();
+        if(version == null || version.length() == 0)
+            version = "1.0.0";
+        interfaceConfig.setVersion(version);
         interfaceConfig.setTimeout(ref.timeout());
         interfaceConfig.setFailStrategy(ref.failStrategy());
         interfaceConfig.setRetryCount(ref.retryCount());
@@ -163,7 +170,9 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor, Enviro
     }
     private void setProviderPath(List<ServiceBean> serviceBeans){
         for(int i = 0;i<serviceBeans.size();i++){
-            providerPaths.add("/wheel/"+interfaceConfigs.get(i).getGroup()+clazzNames.get(i)+"/providers"+"/"+ NetUtils.getServerIp() + ":"
+            String group = interfaceConfigs.get(i).getGroup();
+            String version =  interfaceConfigs.get(i).getVersion();
+            providerPaths.add("/wheel/"+group+"&"+clazzNames.get(i)+"&"+version+"&"+"providers"+"/"+ NetUtils.getServerIp() + ":"
                     +nettyPort+"@"+serviceBeans.get(i).getLoadbalance()+"_"+serviceBeans.get(i).getWeight());
         }
     }
@@ -216,14 +225,20 @@ public class SpringBeanPostProcessor implements BeanFactoryPostProcessor, Enviro
                 WheelService annotation = bean.getClass().getAnnotation(WheelService.class);
 
                 ServiceBean serviceBean = new ServiceBean();
-                serviceBean.setGroup(annotation.group());
+                String group = annotation.group();
+                if(group == null || group.length() == 0)
+                    group = "DEFAULT_GROUP";
+                serviceBean.setGroup(group);
                 serviceBean.setFailStrategy(annotation.failStrategy());
                 serviceBean.setInterface(annotation.interfaceClass().getName());
                 serviceBean.setLoadbalance(annotation.loadBalance());
                 serviceBean.setRef(beanName);
                 serviceBean.setRetryCount(annotation.retryCount());
                 serviceBean.setTimeout(annotation.timeout());
-                serviceBean.setVersion(annotation.version());
+                String version =  annotation.version();
+                if(version == null || version.length() == 0)
+                    version = "1.0.0";
+                serviceBean.setVersion(version);
                 serviceBean.setWeight(Integer.valueOf(annotation.weight()));
                 serviceBeans.add(serviceBean);
             }
