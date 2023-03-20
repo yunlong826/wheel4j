@@ -12,6 +12,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/yunlong826/wheel4j)](https://github.com/yunlong826/wheel4j/stargazers)
 
 # 更新日志
+## 2023/3/20
 1. 新建分支dev1.0.2
 2. 在该分支上新增protobuf序列化方式
 # 前言：
