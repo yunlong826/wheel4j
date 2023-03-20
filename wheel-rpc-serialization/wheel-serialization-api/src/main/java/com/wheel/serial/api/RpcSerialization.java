@@ -1,6 +1,7 @@
 package com.wheel.serial.api;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /*
  *
@@ -12,6 +13,5 @@ import java.io.IOException;
 
 public interface RpcSerialization {
     <T> byte[] serialize(T obj) throws IOException;
-
-    <T> T deserialize(byte[] data, Class<T> clz) throws IOException;
+    <T> T deserialize(byte[] data, Class<T> clz) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 }

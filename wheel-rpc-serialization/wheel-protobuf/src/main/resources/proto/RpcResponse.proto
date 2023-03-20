@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+
+
+//生成 proto 文件所在包路径
+option java_package = "com.wheel.yun.proto";
+
+//生成 proto 文件名
+option java_outer_classname="RpcResponseProto";
+
+message RpcResponse {
+  int64 id = 1;
+  bool is_exception = 2;
+  bool is_event = 3;
+  string message = 4;
+  bytes result = 5;
+}

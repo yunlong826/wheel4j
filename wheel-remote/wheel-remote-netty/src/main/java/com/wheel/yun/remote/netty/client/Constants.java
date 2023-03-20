@@ -3,6 +3,7 @@ package com.wheel.yun.remote.netty.client;
 
 import com.wheel.serial.api.RpcSerialization;
 import com.wheel.yun.json.JsonSerialization;
+import com.wheel.yun.proto.serialize.ProtoBufSerialization;
 
 /**
  * @Author: jessin
@@ -32,5 +33,5 @@ public interface Constants {
 
     String LAST_READ_KEY = "lastReadTimestamp";
 
-    RpcSerialization SERIALIZER = new JsonSerialization();
+    RpcSerialization SERIALIZER = new ProtoBufSerialization();
 }

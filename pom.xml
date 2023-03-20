@@ -25,6 +25,9 @@
         <logback-classic.version>1.1.8</logback-classic.version>
         <curator-framework.version>5.1.0</curator-framework.version>
         <curator-recipes.version>5.1.0</curator-recipes.version>
+        <protobuf.version>3.22.2</protobuf.version>
+        <protostuff.version>1.0.8</protostuff.version>
+        <objenesis.version>2.6</objenesis.version>
     </properties>
 
     <dependencyManagement>
@@ -81,6 +84,30 @@
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-recipes</artifactId>
                 <version>${curator-recipes.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.dyuproject.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.dyuproject.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.objenesis</groupId>
+                <artifactId>objenesis</artifactId>
+                <version>${objenesis.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

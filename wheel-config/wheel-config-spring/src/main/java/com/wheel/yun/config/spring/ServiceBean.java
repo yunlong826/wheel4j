@@ -8,7 +8,6 @@ import com.wheel.yun.config.common.ApplicationConfig;
 import com.wheel.yun.config.common.ProtocolConfig;
 import com.wheel.yun.config.common.RegistryConfig;
 import com.wheel.yun.config.common.ServiceConfig;
-import com.wheel.yun.config.spring.annonation.WheelService;
 import com.wheel.yun.config.spring.util.NetUtils;
 import com.wheel.yun.config.spring.util.WheelBeanUtils;
 import com.wheel.yun.registry.api.RegistryManager;
@@ -22,7 +21,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializingSingleton, DisposableBean,
         ApplicationContextAware, BeanNameAware {
 
-//    private final transient Wheel wheel;
 
     private AtomicBoolean exported = new AtomicBoolean();
 
@@ -67,9 +64,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
     private RegistryService registryService;
 
 
-//    public ServiceBean(){
-//        this.wheel = null;
-//    }
+
 
     @Override
     public void afterSingletonsInstantiated() {
@@ -117,6 +112,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements SmartInitializin
         }else{
             throw new RuntimeException("unknown communicate protocol:" + protocolConfig.get(0).getProtocol());
         }
+
         // 判断什么类型的注册中心
         registryService = RegistryManager.getRegistryService(this.ipAndPort);
         setProviderPath(serviceBean);
