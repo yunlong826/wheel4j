@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:yun="http://yunWheel.yun.com/schema/tag"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://yunWheel.yun.com/schema/tag
+        http://yunWheel.yun.com/schema/tag/wheel.xsd">
+
+    <yun:application name="wheel-test-consumer"/>
+    <yun:registry id="222" address="zookeeper://127.0.0.1:2181"/>
+
+
+    <yun:reference id="imitationTestApi" interface="com.wheel.yun.test.api.ImitationTestApi" retryCount="3" timeout="3000" version="1.0.0"/>
+</beans>
