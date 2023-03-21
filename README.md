@@ -15,6 +15,15 @@
 ## 2023/3/20
 1. 新增dev1.0.2分支
 2. 在该分支上新增protobuf序列化方式
+
+## 2023/3/21
+1. 在wheel-demo模块下，添加了wheel-demo-test模块，模块使用了JMH，对RPC调用时进行更精确的性能测试
+2. 主要测试FastJSON序列化与Protobuf序列化在进行RPC调用时的平均耗时时间
+3. 测试结果在jmh-result-fastJson.json与jmh-result-protobuf.json文件中
+4. 测试结果是JSON数据，可以在指定的网站上可视化，比如网站[https://jmh.morethan.io/](https://jmh.morethan.io/)
+
+![img/img_8.png](img/img_8.png)
+![img/img_9.png](img/img_9.png)
 # 前言：
 如果你还在为课设因为没有项目或者校招没有项目而烦恼，或许你还在嫌弃一些烂大街的项目时，我想说该项目可能会适合你。如果你想了解该项目，您可能需要一些前置知识，比如你了解什么是微服务，你或许使用过Dubbo或者了解SpringCloud，又或许你还了解Rpc远程过程调用，又或许你稍微看了一下Spring与Dubbo的通用源码，那么我相信该项目非常的适合你，而且，我也需要你与我的参与一起完善该项目。我相信你的逻辑能力应该能让这个项目发散更多的闪光点。
 
